@@ -1,4 +1,4 @@
-package com.example.finapp
+package com.example.littleflower
 
 import io.flutter.embedding.android.FlutterActivity
 

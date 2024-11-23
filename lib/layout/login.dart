@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:finapp/layout/layout.dart';
-import 'package:finapp/main.dart';
+import 'package:littleflower/layout/layout.dart';
+import 'package:littleflower/main.dart';
 import 'package:provider/provider.dart';
 
 class LoginPage extends StatefulWidget {
@@ -61,7 +61,7 @@ class _LoginPageState extends State<LoginPage> {
                         minimumSize: const Size(120, 40),
                         textStyle: const TextStyle(fontSize: 15),
                       ),
-                      child: Text('Logout'),
+                      child: const Text('Logout'),
                     ),
                   ],
                 )
@@ -124,7 +124,7 @@ class _LoginPageState extends State<LoginPage> {
                           minimumSize: const Size(120, 40),
                           textStyle: const TextStyle(fontSize: 15),
                         ),
-                        child: Text('Login'),
+                        child: const Text('Login'),
                       ),
                       const SizedBox(height: 16),
                       TextButton(

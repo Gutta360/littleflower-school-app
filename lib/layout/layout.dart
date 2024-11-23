@@ -1,11 +1,11 @@
-import 'package:finapp/layout/clientdetails.dart';
+import 'package:littleflower/layout/clientdetails.dart';
 import 'package:flutter/material.dart';
-import 'package:finapp/appdata/docs_upload.dart';
-import 'package:finapp/layout/login.dart';
-import 'package:finapp/layout/client.dart';
-import 'package:finapp/layout/transaction.dart';
-import 'package:finapp/layout/calculator.dart';
-import 'package:finapp/main.dart';
+import 'package:littleflower/appdata/docs_upload.dart';
+import 'package:littleflower/layout/login.dart';
+import 'package:littleflower/layout/transaction.dart';
+import 'package:littleflower/layout/calculator.dart';
+import 'package:littleflower/main.dart';
+import 'package:littleflower/layout/client.dart';
 import 'package:provider/provider.dart';
 
 class LayoutWidget extends StatefulWidget {
@@ -117,7 +117,7 @@ Widget _buildAlreadyLoggedInTab(BuildContext context, GlobalData globalData) {
           minimumSize: const Size(120, 40),
           textStyle: const TextStyle(fontSize: 15),
         ),
-        child: Text('Logout'),
+        child: const Text('Logout'),
       ),
     ],
   );

@@ -26,18 +26,18 @@
             "webRoot": "${workspaceFolder}"
         },
         {
-            "name": "sunny-finapp",
+            "name": "sunny-littleflower",
             "request": "launch",
             "type": "dart"
         },
         {
-            "name": "sunny-finapp (profile mode)",
+            "name": "sunny-littleflower (profile mode)",
             "request": "launch",
             "type": "dart",
             "flutterMode": "profile"
         },
         {
-            "name": "sunny-finapp (release mode)",
+            "name": "sunny-littleflower (release mode)",
             "request": "launch",
             "type": "dart",
             "flutterMode": "release"

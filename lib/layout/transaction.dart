@@ -155,7 +155,7 @@ class _TxnFormState extends State<TxnForm> {
                         fontSize: 15,
                       ),
                     ),
-                    child: Text('Save'),
+                    child: const Text('Save'),
                   )
                 ],
               ),

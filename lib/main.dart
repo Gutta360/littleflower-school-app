@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:finapp/layout/layout.dart';
+import 'package:littleflower/layout/layout.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -9,9 +9,9 @@ void main() async {
   await Firebase.initializeApp(
     options: const FirebaseOptions(
         apiKey: "AIzaSyBXcAQFzWEnQaEACh7bzPXza1P7zQxapsU",
-        authDomain: "sunnyfinapp.firebaseapp.com",
-        projectId: "sunnyfinapp",
-        storageBucket: "sunnyfinapp.firebasestorage.app",
+        authDomain: "sunnylittleflower.firebaseapp.com",
+        projectId: "sunnylittleflower",
+        storageBucket: "sunnylittleflower.firebasestorage.app",
         messagingSenderId: "98115636944",
         appId: "1:98115636944:web:e7c93958d8ff277c49d8d5",
         measurementId: "G-ZJN28WMZ0Z"),

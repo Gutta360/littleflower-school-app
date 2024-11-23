@@ -1,4 +1,4 @@
-# finapp
+# littleflower
 
 A new Flutter project.
 

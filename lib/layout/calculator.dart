@@ -178,7 +178,7 @@ class _TxnSearchFormState extends State<TxnSearchForm> {
                     fontSize: 15,
                   ),
                 ),
-                child: Text('Calculate'),
+                child: const Text('Calculate'),
               ),
               const SizedBox(height: 16),
               Row(
