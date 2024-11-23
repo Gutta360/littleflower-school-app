@@ -1,11 +1,13 @@
-import 'package:littleflower/layout/clientdetails.dart';
 import 'package:flutter/material.dart';
 import 'package:littleflower/appdata/docs_upload.dart';
 import 'package:littleflower/layout/login.dart';
+import 'package:littleflower/layout/staff.dart';
+import 'package:littleflower/layout/staffdetails.dart';
+import 'package:littleflower/layout/student.dart';
+import 'package:littleflower/layout/studentdetails.dart';
 import 'package:littleflower/layout/transaction.dart';
 import 'package:littleflower/layout/calculator.dart';
 import 'package:littleflower/main.dart';
-import 'package:littleflower/layout/client.dart';
 import 'package:provider/provider.dart';
 
 class LayoutWidget extends StatefulWidget {
@@ -20,7 +22,7 @@ class _LayoutWidgetState extends State<LayoutWidget> {
   Widget build(BuildContext context) {
     final globalData = Provider.of<GlobalData>(context);
     return DefaultTabController(
-      length: 6,
+      length: 8,
       child: Scaffold(
         appBar: AppBar(
           bottom: const TabBar(
@@ -34,11 +36,19 @@ class _LayoutWidgetState extends State<LayoutWidget> {
               ),
               Tab(
                 icon: Icon(Icons.account_circle),
-                text: 'Clients',
+                text: 'Students',
               ),
               Tab(
                 icon: Icon(Icons.account_circle),
-                text: 'Client Details',
+                text: 'Student Details',
+              ),
+              Tab(
+                icon: Icon(Icons.account_circle),
+                text: 'Staff',
+              ),
+              Tab(
+                icon: Icon(Icons.account_circle),
+                text: 'Staff Details',
               ),
               Tab(
                 icon: Icon(Icons.article_outlined),
@@ -55,7 +65,7 @@ class _LayoutWidgetState extends State<LayoutWidget> {
             ],
           ),
           title: const Text(
-            'Easy Finance',
+            'Little Flower',
             style: TextStyle(
               fontSize: 24,
               fontWeight: FontWeight.bold,
@@ -70,8 +80,10 @@ class _LayoutWidgetState extends State<LayoutWidget> {
             globalData.isUserLoggedIn
                 ? _buildAlreadyLoggedInTab(context, globalData)
                 : LoginPage(), // Pass callback
-            globalData.isUserLoggedIn ? Client() : _buildDisabledTab(),
-            globalData.isUserLoggedIn ? ClientDetails() : _buildDisabledTab(),
+            globalData.isUserLoggedIn ? Student() : _buildDisabledTab(),
+            globalData.isUserLoggedIn ? StudentDetails() : _buildDisabledTab(),
+            globalData.isUserLoggedIn ? Staff() : _buildDisabledTab(),
+            globalData.isUserLoggedIn ? StaffDetails() : _buildDisabledTab(),
             globalData.isUserLoggedIn ? TxnForm() : _buildDisabledTab(),
             globalData.isUserLoggedIn ? TxnSearchForm() : _buildDisabledTab(),
             globalData.isUserLoggedIn ? UploadWidget() : _buildDisabledTab(),

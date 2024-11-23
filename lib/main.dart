@@ -8,13 +8,12 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: const FirebaseOptions(
-        apiKey: "AIzaSyBXcAQFzWEnQaEACh7bzPXza1P7zQxapsU",
-        authDomain: "sunnylittleflower.firebaseapp.com",
-        projectId: "sunnylittleflower",
-        storageBucket: "sunnylittleflower.firebasestorage.app",
-        messagingSenderId: "98115636944",
-        appId: "1:98115636944:web:e7c93958d8ff277c49d8d5",
-        measurementId: "G-ZJN28WMZ0Z"),
+        apiKey: "AIzaSyAzz2lntnIRMRGTxvGqUGjYPVK9Zd0TxH0",
+        authDomain: "littleflowerschoolapp.firebaseapp.com",
+        projectId: "littleflowerschoolapp",
+        storageBucket: "littleflowerschoolapp.firebasestorage.app",
+        messagingSenderId: "743465373466",
+        appId: "1:743465373466:web:17e645f781946e24cca6a3"),
   );
   runApp(
     ChangeNotifierProvider(
