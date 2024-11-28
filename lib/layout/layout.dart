@@ -4,6 +4,7 @@ import 'package:littleflower/layout/login.dart';
 import 'package:littleflower/layout/staff.dart';
 import 'package:littleflower/layout/staffdetails.dart';
 import 'package:littleflower/layout/student.dart';
+import 'package:littleflower/layout/student_register_form/student.dart';
 import 'package:littleflower/layout/studentdetails.dart';
 import 'package:littleflower/layout/transaction.dart';
 import 'package:littleflower/layout/calculator.dart';
@@ -80,7 +81,9 @@ class _LayoutWidgetState extends State<LayoutWidget> {
             globalData.isUserLoggedIn
                 ? _buildAlreadyLoggedInTab(context, globalData)
                 : LoginPage(), // Pass callback
-            globalData.isUserLoggedIn ? Student() : _buildDisabledTab(),
+            globalData.isUserLoggedIn
+                ? SchoolRegistrationForm()
+                : _buildDisabledTab(),
             globalData.isUserLoggedIn ? StudentDetails() : _buildDisabledTab(),
             globalData.isUserLoggedIn ? Staff() : _buildDisabledTab(),
             globalData.isUserLoggedIn ? StaffDetails() : _buildDisabledTab(),
