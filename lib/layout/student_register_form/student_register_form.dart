@@ -274,6 +274,18 @@ class _SchoolRegistrationFormState extends State<SchoolRegistrationForm> {
     }
 
     try {
+      // Check if the student name already exists in the "students" collection
+      QuerySnapshot existingStudent = await FirebaseFirestore.instance
+          .collection("students")
+          .where("student_name", isEqualTo: _nameController.text)
+          .get();
+
+      if (existingStudent.docs.isNotEmpty) {
+        // Show an error message if the student name is not unique
+        _showError("Student name must be unique. This name already exists.");
+        return;
+      }
+
       // Fetch the current counter value from Firestore
       DocumentSnapshot counterDoc = await FirebaseFirestore.instance
           .collection("counters")
