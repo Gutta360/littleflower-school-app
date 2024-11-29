@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:littleflower/layout/student_register_form/address_form.dart';
-import 'package:littleflower/layout/student_register_form/emergency_form.dart';
-import 'package:littleflower/layout/student_register_form/parent_guardian_form.dart';
-import 'package:littleflower/layout/student_register_form/physiological_form.dart';
-import 'package:littleflower/layout/student_register_form/student_form.dart';
+import 'package:littleflower/layout/student_register_form_details/address_form.dart';
+import 'package:littleflower/layout/student_register_form_details/emergency_form.dart';
+import 'package:littleflower/layout/student_register_form_details/parent_guardian_form.dart';
+import 'package:littleflower/layout/student_register_form_details/physiological_form.dart';
+import 'package:littleflower/layout/student_register_form_details/student_form.dart';
 
-class SchoolRegistrationForm extends StatefulWidget {
+class SchoolRegistrationFormDetails extends StatefulWidget {
   @override
-  _SchoolRegistrationFormState createState() => _SchoolRegistrationFormState();
+  _SchoolRegistrationFormDetailsState createState() =>
+      _SchoolRegistrationFormDetailsState();
 }
 
-class _SchoolRegistrationFormState extends State<SchoolRegistrationForm> {
+class _SchoolRegistrationFormDetailsState
+    extends State<SchoolRegistrationFormDetails> {
   final _formKey = GlobalKey<FormState>();
   int _currentStep = 0;
 

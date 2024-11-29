@@ -4,6 +4,7 @@ import 'package:littleflower/layout/login.dart';
 import 'package:littleflower/layout/staff.dart';
 import 'package:littleflower/layout/staffdetails.dart';
 import 'package:littleflower/layout/student_register_form/student_register_form.dart';
+import 'package:littleflower/layout/student_register_form_details/student_register_form_details.dart';
 import 'package:littleflower/layout/studentdetails.dart';
 import 'package:littleflower/layout/transaction.dart';
 import 'package:littleflower/layout/calculator.dart';
@@ -83,7 +84,9 @@ class _LayoutWidgetState extends State<LayoutWidget> {
             globalData.isUserLoggedIn
                 ? SchoolRegistrationForm()
                 : _buildDisabledTab(),
-            globalData.isUserLoggedIn ? StudentDetails() : _buildDisabledTab(),
+            globalData.isUserLoggedIn
+                ? SchoolRegistrationFormDetails()
+                : _buildDisabledTab(),
             globalData.isUserLoggedIn ? Staff() : _buildDisabledTab(),
             globalData.isUserLoggedIn ? StaffDetails() : _buildDisabledTab(),
             globalData.isUserLoggedIn ? TxnForm() : _buildDisabledTab(),
