@@ -20,12 +20,14 @@ class EmergencyForm extends StatelessWidget {
           controller: emergencyNameController,
           label: "Name",
           icon: Icons.account_circle,
+          validator: _mandatoryValidator("Name is required"),
         ),
         const SizedBox(height: 16),
         _buildTextField(
           controller: emergencyRelationshipController,
           label: "Relationship",
           icon: Icons.family_restroom,
+          validator: _mandatoryValidator("Relationship is required"),
         ),
         const SizedBox(height: 16),
         _buildTextField(
@@ -55,6 +57,15 @@ class EmergencyForm extends StatelessWidget {
       keyboardType: keyboardType,
       validator: validator,
     );
+  }
+
+  String? Function(String?) _mandatoryValidator(String errorMessage) {
+    return (String? value) {
+      if (value == null || value.isEmpty) {
+        return errorMessage;
+      }
+      return null;
+    };
   }
 
   String? _phoneValidator(String? value) {

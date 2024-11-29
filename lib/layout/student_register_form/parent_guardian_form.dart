@@ -57,6 +57,7 @@ class ParentGuardianForm extends StatelessWidget {
               controller: fatherNameController,
               label: "Father Name",
               icon: Icons.account_circle,
+              validator: _mandatoryValidator("Father Name is required"),
             ),
             _buildTextField(
               controller: fatherPhoneController,
@@ -76,6 +77,7 @@ class ParentGuardianForm extends StatelessWidget {
               controller: fatherOccupationController,
               label: "Father Occupation",
               icon: Icons.work,
+              validator: _mandatoryValidator("Father Occupation is required"),
             ),
           ],
         ),
@@ -99,6 +101,7 @@ class ParentGuardianForm extends StatelessWidget {
               controller: motherNameController,
               label: "Mother Name",
               icon: Icons.account_circle,
+              validator: _mandatoryValidator("Mother Name is required"),
             ),
             _buildTextField(
               controller: motherPhoneController,
@@ -118,19 +121,16 @@ class ParentGuardianForm extends StatelessWidget {
               controller: motherOccupationController,
               label: "Mother Occupation",
               icon: Icons.work,
+              validator: _mandatoryValidator("Mother Occupation is required"),
             ),
           ],
         ),
-
         const SizedBox(height: 40),
-        // Sibling Details
-        Text(
+        const Text(
           "Sibling Details",
           style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 15),
-
-        // Sibling 1 Row
         Row(
           children: [
             Expanded(
@@ -138,9 +138,7 @@ class ParentGuardianForm extends StatelessWidget {
                 controller: sibling1Controller,
                 label: "Sibling 1",
                 icon: Icons.child_care,
-                validator: (value) => value == null || value.isEmpty
-                    ? "Sibling 1 is required"
-                    : null,
+                validator: _mandatoryValidator("Sibling 1 is required"),
               ),
             ),
             const SizedBox(width: 16),
@@ -149,9 +147,7 @@ class ParentGuardianForm extends StatelessWidget {
                 controller: sibling1SchoolController,
                 label: "School Name",
                 icon: Icons.school,
-                validator: (value) => value == null || value.isEmpty
-                    ? "School Name is required"
-                    : null,
+                validator: _mandatoryValidator("School Name is required"),
               ),
             ),
             const SizedBox(width: 16),
@@ -160,16 +156,12 @@ class ParentGuardianForm extends StatelessWidget {
                 controller: sibling1ClassController,
                 label: "Class At",
                 icon: Icons.grade,
-                validator: (value) => value == null || value.isEmpty
-                    ? "Class At is required"
-                    : null,
+                validator: _mandatoryValidator("Class At is required"),
               ),
             ),
           ],
         ),
         const SizedBox(height: 20),
-
-        // Sibling 2 Row
         Row(
           children: [
             Expanded(
@@ -177,9 +169,7 @@ class ParentGuardianForm extends StatelessWidget {
                 controller: sibling2Controller,
                 label: "Sibling 2",
                 icon: Icons.child_care,
-                validator: (value) => value == null || value.isEmpty
-                    ? "Sibling 2 is required"
-                    : null,
+                validator: _mandatoryValidator("Sibling 2 is required"),
               ),
             ),
             const SizedBox(width: 16),
@@ -188,9 +178,7 @@ class ParentGuardianForm extends StatelessWidget {
                 controller: sibling2SchoolController,
                 label: "School Name",
                 icon: Icons.school,
-                validator: (value) => value == null || value.isEmpty
-                    ? "School Name is required"
-                    : null,
+                validator: _mandatoryValidator("School Name is required"),
               ),
             ),
             const SizedBox(width: 16),
@@ -199,9 +187,7 @@ class ParentGuardianForm extends StatelessWidget {
                 controller: sibling2ClassController,
                 label: "Class At",
                 icon: Icons.grade,
-                validator: (value) => value == null || value.isEmpty
-                    ? "Class At is required"
-                    : null,
+                validator: _mandatoryValidator("Class At is required"),
               ),
             ),
           ],
@@ -247,5 +233,14 @@ class ParentGuardianForm extends StatelessWidget {
       return "Invalid email format";
     }
     return null;
+  }
+
+  String? Function(String?) _mandatoryValidator(String errorMessage) {
+    return (String? value) {
+      if (value == null || value.isEmpty) {
+        return errorMessage;
+      }
+      return null;
+    };
   }
 }

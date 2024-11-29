@@ -38,18 +38,21 @@ class PhysiologicalForm extends StatelessWidget {
           controller: attachedToController,
           label: "To whom the child is more attached",
           icon: Icons.favorite,
+          validator: _mandatoryValidator("This field is required"),
         ),
         const SizedBox(height: 16),
         _buildTextField(
           controller: likingsController,
           label: "Likings of the child",
           icon: Icons.thumb_up,
+          validator: _mandatoryValidator("This field is required"),
         ),
         const SizedBox(height: 16),
         _buildTextField(
           controller: dislikingsController,
           label: "Dislikings of the child",
           icon: Icons.thumb_down,
+          validator: _mandatoryValidator("This field is required"),
         ),
       ],
     );
@@ -97,5 +100,14 @@ class PhysiologicalForm extends StatelessWidget {
       ),
       validator: validator,
     );
+  }
+
+  String? Function(String?) _mandatoryValidator(String errorMessage) {
+    return (String? value) {
+      if (value == null || value.isEmpty) {
+        return errorMessage;
+      }
+      return null;
+    };
   }
 }

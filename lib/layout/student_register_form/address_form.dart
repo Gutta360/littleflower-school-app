@@ -35,26 +35,31 @@ class AddressForm extends StatelessWidget {
             controller: addressNameController,
             label: "Name",
             icon: Icons.account_circle,
+            validator: _mandatoryValidator("Name is required"),
           ),
           _buildTextField(
             controller: addressLine1Controller,
             label: "Street Address Line 1",
             icon: Icons.home,
+            validator: _mandatoryValidator("Street Address Line 1 is required"),
           ),
           _buildTextField(
             controller: addressLine2Controller,
             label: "Street Address Line 2",
             icon: Icons.home_outlined,
+            validator: _mandatoryValidator("Street Address Line 2 is required"),
           ),
           _buildTextField(
             controller: cityController,
             label: "City",
             icon: Icons.location_city,
+            validator: _mandatoryValidator("City is required"),
           ),
           _buildTextField(
             controller: stateController,
             label: "State",
             icon: Icons.map,
+            validator: _mandatoryValidator("State is required"),
           ),
           _buildTextField(
             controller: zipCodeController,
@@ -84,6 +89,15 @@ class AddressForm extends StatelessWidget {
       keyboardType: keyboardType,
       validator: validator,
     );
+  }
+
+  String? Function(String?) _mandatoryValidator(String errorMessage) {
+    return (String? value) {
+      if (value == null || value.isEmpty) {
+        return errorMessage;
+      }
+      return null;
+    };
   }
 
   String? _zipValidator(String? value) {
