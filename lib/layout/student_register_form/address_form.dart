@@ -31,12 +31,33 @@ class AddressForm extends StatelessWidget {
           childAspectRatio: 10,
         ),
         children: [
-          _buildTextField(
+          TextFormField(
             controller: addressNameController,
-            label: "Name",
-            hint: "Capitals and Space only. Ex: SURNAME NAME",
-            icon: Icons.account_circle,
-            validator: _mandatoryValidator("Name is required"),
+            decoration: const InputDecoration(
+              labelText: "Name",
+              hintText: "Capitals and Space only. Ex: NAME SURNAME",
+              prefixIcon: Icon(Icons.account_circle),
+            ),
+            onChanged: (value) {
+              final uppercaseValue =
+                  value.toUpperCase().replaceAll(RegExp(r'[^A-Z\s]'), '');
+              if (value != uppercaseValue) {
+                addressNameController.value = TextEditingValue(
+                  text: uppercaseValue,
+                  selection:
+                      TextSelection.collapsed(offset: uppercaseValue.length),
+                );
+              }
+            },
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return "Name is required";
+              }
+              if (!RegExp(r'^[A-Z\s]+$').hasMatch(value)) {
+                return "Only capital letters and spaces are allowed";
+              }
+              return null;
+            },
           ),
           _buildTextField(
             controller: addressLine1Controller,
@@ -66,14 +87,39 @@ class AddressForm extends StatelessWidget {
             icon: Icons.map,
             validator: _mandatoryValidator("State is required"),
           ),
-          _buildTextField(
+          TextFormField(
             controller: zipCodeController,
-            label: "Zip Code",
-            hint: "Enter your 6 digit pin code",
-            icon: Icons.local_post_office,
+            decoration: const InputDecoration(
+              labelText: "Zip Code",
+              hintText: "Enter your 6 digit pin code",
+              prefixIcon: Icon(Icons.local_post_office),
+            ),
             keyboardType: TextInputType.number,
-            validator: _zipValidator,
-          ),
+            onChanged: (value) {
+              final digitValue =
+                  value.replaceAll(RegExp(r'[^0-9]'), ''); // Allow only digits
+              if (digitValue.length > 6) {
+                zipCodeController.value = TextEditingValue(
+                  text: digitValue.substring(0, 6), // Restrict to 6 digits
+                  selection: TextSelection.collapsed(offset: 6),
+                );
+              } else {
+                zipCodeController.value = TextEditingValue(
+                  text: digitValue,
+                  selection: TextSelection.collapsed(offset: digitValue.length),
+                );
+              }
+            },
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return "Zip Code is required";
+              }
+              if (value.length != 6) {
+                return "Must be exactly 6 digits";
+              }
+              return null;
+            },
+          )
         ],
       ),
     );
@@ -106,16 +152,5 @@ class AddressForm extends StatelessWidget {
       }
       return null;
     };
-  }
-
-  String? _zipValidator(String? value) {
-    if (value == null || value.isEmpty) {
-      return "Zip Code is required";
-    } else if (!RegExp(r'^\d+$').hasMatch(value)) {
-      return "Only numeric values are allowed";
-    } else if (value.length != 6) {
-      return "Must be exactly 6 digits";
-    }
-    return null;
   }
 }

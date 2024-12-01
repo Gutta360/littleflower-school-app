@@ -48,6 +48,7 @@ class _StudentFormState extends State<StudentForm> {
           controller: widget.nameController,
           decoration: const InputDecoration(
             labelText: "Name",
+            hintText: "Capitals and Space only. Ex: NAME SURNAME",
             prefixIcon: Icon(Icons.account_circle),
           ),
           onChanged: (value) {
@@ -232,6 +233,7 @@ class _StudentFormState extends State<StudentForm> {
           controller: widget.previousSchoolController,
           context: context,
           label: "Previous School",
+          hint: "Enter Previous School Name",
           icon: Icons.apartment,
           onChanged: (value) {},
           validator: (value) => value == null || value.isEmpty
@@ -246,6 +248,7 @@ class _StudentFormState extends State<StudentForm> {
     required TextEditingController controller,
     required BuildContext context,
     required String label,
+    required String hint,
     required IconData icon,
     TextInputType? keyboardType,
     required void Function(String) onChanged,
@@ -255,6 +258,7 @@ class _StudentFormState extends State<StudentForm> {
       controller: controller,
       decoration: InputDecoration(
         labelText: label,
+        hintText: hint,
         prefixIcon: Icon(icon),
       ),
       keyboardType: keyboardType,

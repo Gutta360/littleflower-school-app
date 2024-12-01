@@ -53,22 +53,72 @@ class ParentGuardianForm extends StatelessWidget {
             childAspectRatio: 8,
           ),
           children: [
-            _buildTextField(
+            TextFormField(
               controller: fatherNameController,
-              label: "Father Name",
-              icon: Icons.account_circle,
-              validator: _mandatoryValidator("Father Name is required"),
+              decoration: const InputDecoration(
+                labelText: "Father Name",
+                hintText: "Capitals and Space only. Ex: NAME SURNAME",
+                prefixIcon: Icon(Icons.account_circle),
+              ),
+              onChanged: (value) {
+                final uppercaseValue =
+                    value.toUpperCase().replaceAll(RegExp(r'[^A-Z\s]'), '');
+                if (value != uppercaseValue) {
+                  fatherNameController.value = TextEditingValue(
+                    text: uppercaseValue,
+                    selection:
+                        TextSelection.collapsed(offset: uppercaseValue.length),
+                  );
+                }
+              },
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return "Father Name is required";
+                }
+                if (!RegExp(r'^[A-Z\s]+$').hasMatch(value)) {
+                  return "Only capital letters and spaces are allowed";
+                }
+                return null;
+              },
             ),
-            _buildTextField(
+            TextFormField(
               controller: fatherPhoneController,
-              label: "Father Phone",
-              icon: Icons.phone,
-              keyboardType: TextInputType.phone,
-              validator: _phoneValidator,
+              decoration: const InputDecoration(
+                labelText: "Father Phone",
+                hintText: "Enter your 10 digit phone number",
+                prefixIcon: Icon(Icons.phone),
+              ),
+              keyboardType: TextInputType.number,
+              onChanged: (value) {
+                final digitValue = value.replaceAll(
+                    RegExp(r'[^0-9]'), ''); // Allow only digits
+                if (digitValue.length > 10) {
+                  fatherPhoneController.value = TextEditingValue(
+                    text: digitValue.substring(0, 10), // Restrict to 10 digits
+                    selection: TextSelection.collapsed(offset: 10),
+                  );
+                } else {
+                  fatherPhoneController.value = TextEditingValue(
+                    text: digitValue,
+                    selection:
+                        TextSelection.collapsed(offset: digitValue.length),
+                  );
+                }
+              },
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return "Father Phone is required";
+                }
+                if (value.length != 10) {
+                  return "Must be exactly 10 digits";
+                }
+                return null;
+              },
             ),
             _buildTextField(
               controller: fatherEmailController,
               label: "Father Email",
+              hint: "Ex: yourname@gmail.com",
               icon: Icons.email,
               keyboardType: TextInputType.emailAddress,
               validator: _emailValidator,
@@ -76,6 +126,7 @@ class ParentGuardianForm extends StatelessWidget {
             _buildTextField(
               controller: fatherOccupationController,
               label: "Father Occupation",
+              hint: "Ex: business or doctor",
               icon: Icons.work,
               validator: _mandatoryValidator("Father Occupation is required"),
             ),
@@ -97,22 +148,72 @@ class ParentGuardianForm extends StatelessWidget {
             childAspectRatio: 8,
           ),
           children: [
-            _buildTextField(
+            TextFormField(
               controller: motherNameController,
-              label: "Mother Name",
-              icon: Icons.account_circle,
-              validator: _mandatoryValidator("Mother Name is required"),
+              decoration: const InputDecoration(
+                labelText: "Mother Name",
+                hintText: "Capitals and Space only. Ex: NAME SURNAME",
+                prefixIcon: Icon(Icons.account_circle),
+              ),
+              onChanged: (value) {
+                final uppercaseValue =
+                    value.toUpperCase().replaceAll(RegExp(r'[^A-Z\s]'), '');
+                if (value != uppercaseValue) {
+                  motherNameController.value = TextEditingValue(
+                    text: uppercaseValue,
+                    selection:
+                        TextSelection.collapsed(offset: uppercaseValue.length),
+                  );
+                }
+              },
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return "Mother Name is required";
+                }
+                if (!RegExp(r'^[A-Z\s]+$').hasMatch(value)) {
+                  return "Only capital letters and spaces are allowed";
+                }
+                return null;
+              },
             ),
-            _buildTextField(
+            TextFormField(
               controller: motherPhoneController,
-              label: "Mother Phone",
-              icon: Icons.phone,
-              keyboardType: TextInputType.phone,
-              validator: _phoneValidator,
+              decoration: const InputDecoration(
+                labelText: "Mother Phone",
+                hintText: "Enter your 10 digit phone number",
+                prefixIcon: Icon(Icons.phone),
+              ),
+              keyboardType: TextInputType.number,
+              onChanged: (value) {
+                final digitValue = value.replaceAll(
+                    RegExp(r'[^0-9]'), ''); // Allow only digits
+                if (digitValue.length > 10) {
+                  motherPhoneController.value = TextEditingValue(
+                    text: digitValue.substring(0, 10), // Restrict to 10 digits
+                    selection: TextSelection.collapsed(offset: 10),
+                  );
+                } else {
+                  motherPhoneController.value = TextEditingValue(
+                    text: digitValue,
+                    selection:
+                        TextSelection.collapsed(offset: digitValue.length),
+                  );
+                }
+              },
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return "Mother Phone is required";
+                }
+                if (value.length != 10) {
+                  return "Must be exactly 10 digits";
+                }
+                return null;
+              },
             ),
             _buildTextField(
               controller: motherEmailController,
               label: "Mother Email",
+              hint: "Ex: yourname@gmail.com",
               icon: Icons.email,
               keyboardType: TextInputType.emailAddress,
               validator: _emailValidator,
@@ -120,6 +221,7 @@ class ParentGuardianForm extends StatelessWidget {
             _buildTextField(
               controller: motherOccupationController,
               label: "Mother Occupation",
+              hint: "Ex: home maker or doctor",
               icon: Icons.work,
               validator: _mandatoryValidator("Mother Occupation is required"),
             ),
@@ -134,11 +236,33 @@ class ParentGuardianForm extends StatelessWidget {
         Row(
           children: [
             Expanded(
-              child: _buildTextField(
+              child: TextFormField(
                 controller: sibling1Controller,
-                label: "Sibling 1",
-                icon: Icons.child_care,
-                validator: _mandatoryValidator("Sibling 1 is required"),
+                decoration: const InputDecoration(
+                  labelText: "Sibling 1",
+                  hintText: "Capitals and Space only. Ex: VARUN TEJ",
+                  prefixIcon: Icon(Icons.account_circle),
+                ),
+                onChanged: (value) {
+                  final uppercaseValue =
+                      value.toUpperCase().replaceAll(RegExp(r'[^A-Z\s]'), '');
+                  if (value != uppercaseValue) {
+                    sibling1Controller.value = TextEditingValue(
+                      text: uppercaseValue,
+                      selection: TextSelection.collapsed(
+                          offset: uppercaseValue.length),
+                    );
+                  }
+                },
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return "Sibling 1 is required";
+                  }
+                  if (!RegExp(r'^[A-Z\s]+$').hasMatch(value)) {
+                    return "Only capital letters and spaces are allowed";
+                  }
+                  return null;
+                },
               ),
             ),
             const SizedBox(width: 16),
@@ -146,6 +270,7 @@ class ParentGuardianForm extends StatelessWidget {
               child: _buildTextField(
                 controller: sibling1SchoolController,
                 label: "School Name",
+                hint: "Enter School Name",
                 icon: Icons.school,
                 validator: _mandatoryValidator("School Name is required"),
               ),
@@ -155,6 +280,7 @@ class ParentGuardianForm extends StatelessWidget {
               child: _buildTextField(
                 controller: sibling1ClassController,
                 label: "Class At",
+                hint: "Ex: 1",
                 icon: Icons.grade,
                 validator: _mandatoryValidator("Class At is required"),
               ),
@@ -165,11 +291,33 @@ class ParentGuardianForm extends StatelessWidget {
         Row(
           children: [
             Expanded(
-              child: _buildTextField(
+              child: TextFormField(
                 controller: sibling2Controller,
-                label: "Sibling 2",
-                icon: Icons.child_care,
-                validator: _mandatoryValidator("Sibling 2 is required"),
+                decoration: const InputDecoration(
+                  labelText: "Sibling 2",
+                  hintText: "Capitals and Space only. Ex: VARUN TEJ",
+                  prefixIcon: Icon(Icons.account_circle),
+                ),
+                onChanged: (value) {
+                  final uppercaseValue =
+                      value.toUpperCase().replaceAll(RegExp(r'[^A-Z\s]'), '');
+                  if (value != uppercaseValue) {
+                    sibling2Controller.value = TextEditingValue(
+                      text: uppercaseValue,
+                      selection: TextSelection.collapsed(
+                          offset: uppercaseValue.length),
+                    );
+                  }
+                },
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return "Sibling 2 is required";
+                  }
+                  if (!RegExp(r'^[A-Z\s]+$').hasMatch(value)) {
+                    return "Only capital letters and spaces are allowed";
+                  }
+                  return null;
+                },
               ),
             ),
             const SizedBox(width: 16),
@@ -177,6 +325,7 @@ class ParentGuardianForm extends StatelessWidget {
               child: _buildTextField(
                 controller: sibling2SchoolController,
                 label: "School Name",
+                hint: "Ex: Enter School Name",
                 icon: Icons.school,
                 validator: _mandatoryValidator("School Name is required"),
               ),
@@ -186,6 +335,7 @@ class ParentGuardianForm extends StatelessWidget {
               child: _buildTextField(
                 controller: sibling2ClassController,
                 label: "Class At",
+                hint: "Ex: 1",
                 icon: Icons.grade,
                 validator: _mandatoryValidator("Class At is required"),
               ),
@@ -199,6 +349,7 @@ class ParentGuardianForm extends StatelessWidget {
   Widget _buildTextField({
     required TextEditingController controller,
     required String label,
+    required String hint,
     required IconData icon,
     TextInputType? keyboardType,
     String? Function(String?)? validator,
@@ -207,6 +358,7 @@ class ParentGuardianForm extends StatelessWidget {
       controller: controller,
       decoration: InputDecoration(
         labelText: label,
+        hintText: hint,
         prefixIcon: Icon(icon),
       ),
       keyboardType: keyboardType,

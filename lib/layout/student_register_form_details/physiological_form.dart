@@ -37,6 +37,7 @@ class PhysiologicalForm extends StatelessWidget {
         _buildTextField(
           controller: attachedToController,
           label: "To whom the child is more attached",
+          hint: "Ex: father or mother or grand father",
           icon: Icons.favorite,
           validator: _mandatoryValidator("This field is required"),
         ),
@@ -44,6 +45,7 @@ class PhysiologicalForm extends StatelessWidget {
         _buildTextField(
           controller: likingsController,
           label: "Likings of the child",
+          hint: "Ex: swimming or socializing",
           icon: Icons.thumb_up,
           validator: _mandatoryValidator("This field is required"),
         ),
@@ -51,6 +53,7 @@ class PhysiologicalForm extends StatelessWidget {
         _buildTextField(
           controller: dislikingsController,
           label: "Dislikings of the child",
+          hint: "Ex: swimming or socializing",
           icon: Icons.thumb_down,
           validator: _mandatoryValidator("This field is required"),
         ),
@@ -89,6 +92,7 @@ class PhysiologicalForm extends StatelessWidget {
   Widget _buildTextField({
     required TextEditingController controller,
     required String label,
+    required String hint,
     required IconData icon,
     String? Function(String?)? validator,
   }) {
@@ -96,6 +100,7 @@ class PhysiologicalForm extends StatelessWidget {
       controller: controller,
       decoration: InputDecoration(
         labelText: label,
+        hintText: hint,
         prefixIcon: Icon(icon),
       ),
       validator: validator,

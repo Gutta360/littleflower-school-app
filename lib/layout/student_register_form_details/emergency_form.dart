@@ -16,26 +16,75 @@ class EmergencyForm extends StatelessWidget {
     return ListView(
       padding: const EdgeInsets.symmetric(horizontal: 400.0, vertical: 16.0),
       children: [
-        _buildTextField(
+        TextFormField(
           controller: emergencyNameController,
-          label: "Name",
-          icon: Icons.account_circle,
-          validator: _mandatoryValidator("Name is required"),
+          decoration: const InputDecoration(
+            labelText: "Name",
+            hintText: "Capitals and Space only. Ex: NAME SURNAME",
+            prefixIcon: Icon(Icons.account_circle),
+          ),
+          onChanged: (value) {
+            final uppercaseValue =
+                value.toUpperCase().replaceAll(RegExp(r'[^A-Z\s]'), '');
+            if (value != uppercaseValue) {
+              emergencyNameController.value = TextEditingValue(
+                text: uppercaseValue,
+                selection:
+                    TextSelection.collapsed(offset: uppercaseValue.length),
+              );
+            }
+          },
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return "Name is required";
+            }
+            if (!RegExp(r'^[A-Z\s]+$').hasMatch(value)) {
+              return "Only capital letters and spaces are allowed";
+            }
+            return null;
+          },
         ),
         const SizedBox(height: 16),
         _buildTextField(
           controller: emergencyRelationshipController,
           label: "Relationship",
+          hint: "uncle or aunt",
           icon: Icons.family_restroom,
           validator: _mandatoryValidator("Relationship is required"),
         ),
         const SizedBox(height: 16),
-        _buildTextField(
+        TextFormField(
           controller: emergencyPhoneController,
-          label: "Phone",
-          icon: Icons.phone,
-          keyboardType: TextInputType.phone,
-          validator: _phoneValidator,
+          decoration: const InputDecoration(
+            labelText: "Phone",
+            hintText: "Enter your 10 digit phone number",
+            prefixIcon: Icon(Icons.phone),
+          ),
+          keyboardType: TextInputType.number,
+          onChanged: (value) {
+            final digitValue =
+                value.replaceAll(RegExp(r'[^0-9]'), ''); // Allow only digits
+            if (digitValue.length > 10) {
+              emergencyPhoneController.value = TextEditingValue(
+                text: digitValue.substring(0, 10), // Restrict to 10 digits
+                selection: TextSelection.collapsed(offset: 10),
+              );
+            } else {
+              emergencyPhoneController.value = TextEditingValue(
+                text: digitValue,
+                selection: TextSelection.collapsed(offset: digitValue.length),
+              );
+            }
+          },
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return "Phone number is required";
+            }
+            if (value.length != 10) {
+              return "Must be exactly 10 digits";
+            }
+            return null;
+          },
         ),
       ],
     );
@@ -44,6 +93,7 @@ class EmergencyForm extends StatelessWidget {
   Widget _buildTextField({
     required TextEditingController controller,
     required String label,
+    required String hint,
     required IconData icon,
     TextInputType? keyboardType,
     String? Function(String?)? validator,
@@ -52,6 +102,7 @@ class EmergencyForm extends StatelessWidget {
       controller: controller,
       decoration: InputDecoration(
         labelText: label,
+        hintText: hint,
         prefixIcon: Icon(icon),
       ),
       keyboardType: keyboardType,
@@ -66,16 +117,5 @@ class EmergencyForm extends StatelessWidget {
       }
       return null;
     };
-  }
-
-  String? _phoneValidator(String? value) {
-    if (value == null || value.isEmpty) {
-      return "Phone is required";
-    } else if (!RegExp(r'^\d+$').hasMatch(value)) {
-      return "Only numeric values are allowed";
-    } else if (value.length != 10) {
-      return "Must be exactly 10 digits";
-    }
-    return null;
   }
 }

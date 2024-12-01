@@ -1,14 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:littleflower/appdata/docs_upload.dart';
 import 'package:littleflower/layout/login.dart';
-import 'package:littleflower/layout/staff.dart';
 import 'package:littleflower/layout/staff_register_form/staff_register_form.dart';
-import 'package:littleflower/layout/staffdetails.dart';
+import 'package:littleflower/layout/staff_register_form_details/staff_register_form_details.dart';
 import 'package:littleflower/layout/student_register_form/student_register_form.dart';
 import 'package:littleflower/layout/student_register_form_details/student_register_form_details.dart';
-import 'package:littleflower/layout/studentdetails.dart';
-import 'package:littleflower/layout/transaction.dart';
-import 'package:littleflower/layout/calculator.dart';
 import 'package:littleflower/main.dart';
 import 'package:provider/provider.dart';
 
@@ -37,39 +32,39 @@ class _LayoutWidgetState extends State<LayoutWidget> {
                 text: 'Login',
               ),
               Tab(
-                icon: Icon(Icons.account_circle),
-                text: 'Students',
+                icon: Icon(Icons.school),
+                text: 'Student',
               ),
               Tab(
                 icon: Icon(Icons.account_circle),
                 text: 'Student Details',
               ),
               Tab(
-                icon: Icon(Icons.account_circle),
+                icon: Icon(Icons.group),
                 text: 'Staff',
               ),
               Tab(
-                icon: Icon(Icons.account_circle),
+                icon: Icon(Icons.badge),
                 text: 'Staff Details',
               ),
               Tab(
-                icon: Icon(Icons.article_outlined),
-                text: 'Transactions',
+                icon: Icon(Icons.payment),
+                text: 'Payments',
               ),
               Tab(
-                icon: Icon(Icons.calculate),
-                text: 'Calculator',
+                icon: Icon(Icons.inventory),
+                text: 'Inventory',
               ),
               Tab(
-                icon: Icon(Icons.upload),
-                text: 'Data',
+                icon: Icon(Icons.build_circle),
+                text: 'Utilities',
               ),
             ],
           ),
           title: const Text(
-            'Little Flower',
+            'A Little Flower The Leader',
             style: TextStyle(
-              fontSize: 24,
+              fontSize: 30,
               fontWeight: FontWeight.bold,
             ),
           ),
@@ -91,10 +86,18 @@ class _LayoutWidgetState extends State<LayoutWidget> {
             globalData.isUserLoggedIn
                 ? StaffRegistrationForm()
                 : _buildDisabledTab(),
-            globalData.isUserLoggedIn ? StaffDetails() : _buildDisabledTab(),
-            globalData.isUserLoggedIn ? TxnForm() : _buildDisabledTab(),
-            globalData.isUserLoggedIn ? TxnSearchForm() : _buildDisabledTab(),
-            globalData.isUserLoggedIn ? UploadWidget() : _buildDisabledTab(),
+            globalData.isUserLoggedIn
+                ? StaffRegistrationFormDetails()
+                : _buildDisabledTab(),
+            globalData.isUserLoggedIn
+                ? _buildUnderProgressTab()
+                : _buildDisabledTab(),
+            globalData.isUserLoggedIn
+                ? _buildUnderProgressTab()
+                : _buildDisabledTab(),
+            globalData.isUserLoggedIn
+                ? _buildUnderProgressTab()
+                : _buildDisabledTab(),
           ],
         ),
       ),
@@ -105,6 +108,15 @@ class _LayoutWidgetState extends State<LayoutWidget> {
     return const Center(
       child: Text(
         'Please log in to access this tab.',
+        style: TextStyle(fontSize: 18, color: Colors.grey),
+      ),
+    );
+  }
+
+  Widget _buildUnderProgressTab() {
+    return const Center(
+      child: Text(
+        'Development under progress',
         style: TextStyle(fontSize: 18, color: Colors.grey),
       ),
     );

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class StaffForm extends StatefulWidget {
   final TextEditingController nameController;
@@ -14,6 +15,12 @@ class StaffForm extends StatefulWidget {
   final TextEditingController currentSalaryController;
   final TextEditingController originalCertificatesController;
   final TextEditingController agreementPeriodController;
+  final TextEditingController addressNameController;
+  final TextEditingController addressLine1Controller;
+  final TextEditingController addressLine2Controller;
+  final TextEditingController cityController;
+  final TextEditingController stateController;
+  final TextEditingController zipCodeController;
 
   const StaffForm({
     Key? key,
@@ -30,6 +37,12 @@ class StaffForm extends StatefulWidget {
     required this.currentSalaryController,
     required this.originalCertificatesController,
     required this.agreementPeriodController,
+    required this.addressNameController,
+    required this.addressLine1Controller,
+    required this.addressLine2Controller,
+    required this.cityController,
+    required this.stateController,
+    required this.zipCodeController,
   }) : super(key: key);
 
   @override
@@ -37,6 +50,34 @@ class StaffForm extends StatefulWidget {
 }
 
 class _StaffFormState extends State<StaffForm> {
+  List<String> staffNames = [];
+  String? selectedStaffName;
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchStudentNames();
+  }
+
+  Future<void> _fetchStudentNames() async {
+    try {
+      QuerySnapshot snapshot =
+          await FirebaseFirestore.instance.collection('staff').get();
+
+      setState(() {
+        staffNames =
+            snapshot.docs.map((doc) => doc['staff_name'] as String).toList();
+      });
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error fetching staff names: $e'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return GridView(
@@ -48,33 +89,27 @@ class _StaffFormState extends State<StaffForm> {
         childAspectRatio: 6,
       ),
       children: [
-        TextFormField(
-          controller: widget.nameController,
+        DropdownButtonFormField<String>(
           decoration: const InputDecoration(
             labelText: "Name",
             hintText: "Capitals and Space only. Ex: NAME SURNAME",
             prefixIcon: Icon(Icons.account_circle),
           ),
+          value: selectedStaffName,
+          items: staffNames
+              .map((name) => DropdownMenuItem(value: name, child: Text(name)))
+              .toList(),
           onChanged: (value) {
-            final uppercaseValue =
-                value.toUpperCase().replaceAll(RegExp(r'[^A-Z\s]'), '');
-            if (value != uppercaseValue) {
-              widget.nameController.value = TextEditingValue(
-                text: uppercaseValue,
-                selection:
-                    TextSelection.collapsed(offset: uppercaseValue.length),
-              );
+            setState(() {
+              selectedStaffName = value;
+              widget.nameController.text = value ?? '';
+            });
+            if (value != null) {
+              _populateFields(value);
             }
           },
-          validator: (value) {
-            if (value == null || value.isEmpty) {
-              return "Name is required";
-            }
-            if (!RegExp(r'^[A-Z\s]+$').hasMatch(value)) {
-              return "Only capital letters and spaces are allowed";
-            }
-            return null;
-          },
+          validator: (value) =>
+              value == null || value.isEmpty ? "Name is required" : null,
         ),
         _buildExTextField(
           controller: widget.fatherHusbandNameController,
@@ -302,5 +337,106 @@ class _StaffFormState extends State<StaffForm> {
         return null;
       },
     );
+  }
+
+  Widget _buildNameDropdown() {
+    return FutureBuilder<List<String>>(
+      future: _fetchStaffNames(), // Fetch staff names from Firestore
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        }
+        if (snapshot.hasError) {
+          return Text("Error: ${snapshot.error}");
+        }
+        if (!snapshot.hasData || snapshot.data!.isEmpty) {
+          return const Text("No staff names available");
+        }
+
+        return DropdownButtonFormField<String>(
+          value: widget.nameController.text.isNotEmpty
+              ? widget.nameController.text
+              : null, // Set initial value if available
+          decoration: const InputDecoration(
+            labelText: "Name",
+            hintText: "Select a staff name",
+            prefixIcon: Icon(Icons.account_circle),
+          ),
+          items: staffNames
+              .map((name) => DropdownMenuItem(value: name, child: Text(name)))
+              .toList(),
+          onChanged: (value) {
+            if (value != null) {
+              setState(() {
+                widget.nameController.text = value;
+              });
+            }
+          },
+          validator: (value) =>
+              value == null || value.isEmpty ? "Name is required" : null,
+        );
+      },
+    );
+  }
+
+  Future<List<String>> _fetchStaffNames() async {
+    try {
+      final querySnapshot = await FirebaseFirestore.instance
+          .collection("staff")
+          .get(); // Fetch all documents in the "staff" collection
+      return querySnapshot.docs
+          .map((doc) => doc["staff_name"] as String) // Extract staff_name
+          .toList();
+    } catch (e) {
+      throw Exception("Failed to fetch staff names: $e");
+    }
+  }
+
+  Future<void> _populateFields(String studentName) async {
+    try {
+      QuerySnapshot snapshot = await FirebaseFirestore.instance
+          .collection('staff')
+          .where('staff_name', isEqualTo: studentName)
+          .get();
+
+      if (snapshot.docs.isNotEmpty) {
+        var data = snapshot.docs.first.data() as Map<String, dynamic>;
+
+        setState(() {
+          widget.fatherHusbandNameController.text =
+              data['staff_fatherorhusband_name'] ?? '';
+          widget.aadharNoController.text = data['staff_aadhar_no'] ?? '';
+          widget.educationalQualificationController.text =
+              data['staff_educational_qualification'] ?? '';
+          widget.otherSkillsController.text = data['staff_other_skills'] ?? '';
+          widget.maritalStatusController.value = data['staff_marital_status'];
+          widget.childrenController.text = data['staff_children'] ?? '';
+          widget.experienceController.text = data['staff_experience'] ?? '';
+          widget.previousSalaryController.text =
+              data['staff_previous_salary'] ?? '';
+          widget.expectedSalaryController.text =
+              data['staff_expected_salary'] ?? '';
+          widget.currentSalaryController.text =
+              data['staff_current_salary'] ?? '';
+          widget.originalCertificatesController.text =
+              data['staff_original_certificates'] ?? '';
+          widget.agreementPeriodController.text =
+              data['staff_agreement_period'] ?? '';
+          widget.addressNameController.text = data['address_name'] ?? '';
+          widget.addressLine1Controller.text = data['address_line1'] ?? '';
+          widget.addressLine2Controller.text = data['address_line2'] ?? '';
+          widget.cityController.text = data['address_city'] ?? '';
+          widget.stateController.text = data['address_state'] ?? '';
+          widget.zipCodeController.text = data['address_zip'] ?? '';
+        });
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error populating fields: $e'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
   }
 }
