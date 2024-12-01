@@ -13,6 +13,35 @@ class StudentForm extends StatefulWidget {
   final ValueNotifier<String?> casteController;
   final TextEditingController previousSchoolController;
 
+  final TextEditingController fatherNameController;
+  final TextEditingController fatherPhoneController;
+  final TextEditingController fatherEmailController;
+  final TextEditingController fatherOccupationController;
+  final TextEditingController motherNameController;
+  final TextEditingController motherPhoneController;
+  final TextEditingController motherEmailController;
+  final TextEditingController motherOccupationController;
+  final TextEditingController sibling1Controller;
+  final TextEditingController sibling1SchoolController;
+  final TextEditingController sibling1ClassController;
+  final TextEditingController sibling2Controller;
+  final TextEditingController sibling2SchoolController;
+  final TextEditingController sibling2ClassController;
+  final TextEditingController emergencyNameController;
+  final TextEditingController emergencyRelationshipController;
+  final TextEditingController emergencyPhoneController;
+  final TextEditingController addressNameController;
+  final TextEditingController addressLine1Controller;
+  final TextEditingController addressLine2Controller;
+  final TextEditingController cityController;
+  final TextEditingController stateController;
+  final TextEditingController zipCodeController;
+  final ValueNotifier<String?> placeInFamilyController;
+  final ValueNotifier<String?> childrenAroundController;
+  final TextEditingController attachedToController;
+  final TextEditingController likingsController;
+  final TextEditingController dislikingsController;
+
   const StudentForm({
     Key? key,
     required this.nameController,
@@ -24,6 +53,34 @@ class StudentForm extends StatefulWidget {
     required this.nationalityController,
     required this.casteController,
     required this.previousSchoolController,
+    required this.fatherNameController,
+    required this.fatherPhoneController,
+    required this.fatherEmailController,
+    required this.fatherOccupationController,
+    required this.motherNameController,
+    required this.motherPhoneController,
+    required this.motherEmailController,
+    required this.motherOccupationController,
+    required this.sibling1Controller,
+    required this.sibling1SchoolController,
+    required this.sibling1ClassController,
+    required this.sibling2Controller,
+    required this.sibling2SchoolController,
+    required this.sibling2ClassController,
+    required this.emergencyNameController,
+    required this.emergencyRelationshipController,
+    required this.emergencyPhoneController,
+    required this.addressNameController,
+    required this.addressLine1Controller,
+    required this.addressLine2Controller,
+    required this.cityController,
+    required this.stateController,
+    required this.zipCodeController,
+    required this.placeInFamilyController,
+    required this.childrenAroundController,
+    required this.attachedToController,
+    required this.likingsController,
+    required this.dislikingsController,
   }) : super(key: key);
 
   @override
@@ -41,6 +98,7 @@ class _StudentFormState extends State<StudentForm> {
     _fetchStudentNames();
   }
 
+  /// Fetch all student names from Firestore
   Future<void> _fetchStudentNames() async {
     try {
       QuerySnapshot snapshot =
@@ -54,6 +112,74 @@ class _StudentFormState extends State<StudentForm> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Error fetching student names: $e'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
+  }
+
+  /// Fetch and populate the fields when a student is selected
+  Future<void> _populateFields(String studentName) async {
+    try {
+      QuerySnapshot snapshot = await FirebaseFirestore.instance
+          .collection('students')
+          .where('student_name', isEqualTo: studentName)
+          .get();
+
+      if (snapshot.docs.isNotEmpty) {
+        var data = snapshot.docs.first.data() as Map<String, dynamic>;
+
+        setState(() {
+          widget.dobController.text = data['student_dob'] ?? '';
+          widget.motherTongueController.value = data['student_mother_tongue'];
+          widget.gradeController.value = data['student_grade'];
+          widget.genderController.value = data['student_gender'];
+          widget.religionController.value = data['student_religion'];
+          widget.nationalityController.value = data['student_nationality'];
+          widget.casteController.value = data['student_caste'];
+          widget.previousSchoolController.text =
+              data['student_previous_school'] ?? '';
+          widget.fatherNameController.text = data['father_name'] ?? '';
+          widget.fatherPhoneController.text = data['father_phone'] ?? '';
+          widget.fatherEmailController.text = data['father_email'] ?? '';
+          widget.fatherOccupationController.text =
+              data['father_occupation'] ?? '';
+          widget.motherNameController.text = data['mother_name'] ?? '';
+          widget.motherPhoneController.text = data['mother_phone'] ?? '';
+          widget.motherEmailController.text = data['mother_email'] ?? '';
+          widget.motherOccupationController.text =
+              data['mother_occupation'] ?? '';
+          widget.sibling1Controller.text = data['sibling1_name'] ?? '';
+          widget.sibling1SchoolController.text = data['sibling1_school'] ?? '';
+          widget.sibling1ClassController.text = data['sibling1_class'] ?? '';
+          widget.sibling2Controller.text = data['sibling2_name'] ?? '';
+          widget.sibling2SchoolController.text = data['sibling2_school'] ?? '';
+          widget.sibling2ClassController.text = data['sibling2_class'] ?? '';
+          widget.emergencyNameController.text = data['emergency_name'] ?? '';
+          widget.emergencyRelationshipController.text =
+              data['emergency_relationship'] ?? '';
+          widget.emergencyPhoneController.text = data['emergency_phone'] ?? '';
+          widget.addressNameController.text = data['address_name'] ?? '';
+          widget.addressLine1Controller.text = data['address_line1'] ?? '';
+          widget.addressLine2Controller.text = data['address_line2'] ?? '';
+          widget.cityController.text = data['address_city'] ?? '';
+          widget.stateController.text = data['address_state'] ?? '';
+          widget.zipCodeController.text = data['address_zip'] ?? '';
+          widget.placeInFamilyController.value =
+              data['physcological_placeofthechild'];
+          widget.childrenAroundController.value =
+              data['physcological_children_around'];
+          widget.attachedToController.text =
+              data['physcological_attachedto'] ?? '';
+          widget.likingsController.text = data['physcological_likings'] ?? '';
+          widget.dislikingsController.text =
+              data['physcological_dislikings'] ?? '';
+        });
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error populating fields: $e'),
           backgroundColor: Colors.red,
         ),
       );
@@ -86,10 +212,15 @@ class _StudentFormState extends State<StudentForm> {
               selectedStudentName = value;
               widget.nameController.text = value ?? '';
             });
+            if (value != null) {
+              _populateFields(value);
+            }
           },
           validator: (value) =>
               value == null || value.isEmpty ? "Name is required" : null,
         ),
+
+        // Date of Birth Field
         _buildDatePickerField(context),
 
         // Mother Tongue Dropdown
@@ -245,7 +376,7 @@ class _StudentFormState extends State<StudentForm> {
             );
           },
         ),
-
+        // Previous School Field
         _buildTextField(
           controller: widget.previousSchoolController,
           context: context,

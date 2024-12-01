@@ -34,36 +34,42 @@ class AddressForm extends StatelessWidget {
           _buildTextField(
             controller: addressNameController,
             label: "Name",
+            hint: "Capitals and Space only. Ex: SURNAME NAME",
             icon: Icons.account_circle,
             validator: _mandatoryValidator("Name is required"),
           ),
           _buildTextField(
             controller: addressLine1Controller,
             label: "Street Address Line 1",
+            hint: "Ex: Door No, House Name, Street",
             icon: Icons.home,
             validator: _mandatoryValidator("Street Address Line 1 is required"),
           ),
           _buildTextField(
             controller: addressLine2Controller,
             label: "Street Address Line 2",
+            hint: "Ex: Steet, Land mark",
             icon: Icons.home_outlined,
             validator: _mandatoryValidator("Street Address Line 2 is required"),
           ),
           _buildTextField(
             controller: cityController,
             label: "City",
+            hint: "Ex: Vijayawada",
             icon: Icons.location_city,
             validator: _mandatoryValidator("City is required"),
           ),
           _buildTextField(
             controller: stateController,
             label: "State",
+            hint: "Ex: Andhra Pradesh",
             icon: Icons.map,
             validator: _mandatoryValidator("State is required"),
           ),
           _buildTextField(
             controller: zipCodeController,
             label: "Zip Code",
+            hint: "Enter your 6 digit pin code",
             icon: Icons.local_post_office,
             keyboardType: TextInputType.number,
             validator: _zipValidator,
@@ -76,6 +82,7 @@ class AddressForm extends StatelessWidget {
   Widget _buildTextField({
     required TextEditingController controller,
     required String label,
+    required String hint,
     required IconData icon,
     TextInputType? keyboardType,
     String? Function(String?)? validator,
@@ -84,6 +91,7 @@ class AddressForm extends StatelessWidget {
       controller: controller,
       decoration: InputDecoration(
         labelText: label,
+        hintText: hint,
         prefixIcon: Icon(icon),
       ),
       keyboardType: keyboardType,

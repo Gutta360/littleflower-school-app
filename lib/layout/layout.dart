@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:littleflower/appdata/docs_upload.dart';
 import 'package:littleflower/layout/login.dart';
 import 'package:littleflower/layout/staff.dart';
+import 'package:littleflower/layout/staff_register_form/staff_register_form.dart';
 import 'package:littleflower/layout/staffdetails.dart';
 import 'package:littleflower/layout/student_register_form/student_register_form.dart';
 import 'package:littleflower/layout/student_register_form_details/student_register_form_details.dart';
@@ -87,7 +88,9 @@ class _LayoutWidgetState extends State<LayoutWidget> {
             globalData.isUserLoggedIn
                 ? SchoolRegistrationFormDetails()
                 : _buildDisabledTab(),
-            globalData.isUserLoggedIn ? Staff() : _buildDisabledTab(),
+            globalData.isUserLoggedIn
+                ? StaffRegistrationForm()
+                : _buildDisabledTab(),
             globalData.isUserLoggedIn ? StaffDetails() : _buildDisabledTab(),
             globalData.isUserLoggedIn ? TxnForm() : _buildDisabledTab(),
             globalData.isUserLoggedIn ? TxnSearchForm() : _buildDisabledTab(),
