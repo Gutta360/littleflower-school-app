@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:littleflower/layout/login.dart';
-import 'package:littleflower/layout/staff_register_form/staff_register_form.dart';
-import 'package:littleflower/layout/staff_register_form_details/staff_register_form_details.dart';
-import 'package:littleflower/layout/student_register_form/student_register_form.dart';
-import 'package:littleflower/layout/student_register_form_details/student_register_form_details.dart';
+import 'package:littleflower/forms/staff/staff_register_form/staff_register_form.dart';
+import 'package:littleflower/forms/staff/staff_register_form_details/staff_register_form_details.dart';
+import 'package:littleflower/forms/student/student_register_form/student_register_form.dart';
+import 'package:littleflower/forms/student/student_register_form_details/student_register_form_details.dart';
 import 'package:littleflower/main.dart';
 import 'package:provider/provider.dart';
 

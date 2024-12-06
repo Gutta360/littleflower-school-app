@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:littleflower/layout/staff_register_form/staff_form.dart';
-import 'package:littleflower/layout/staff_register_form/address_form.dart';
+import 'package:littleflower/forms/staff/staff_register_form/staff_form.dart';
+import 'package:littleflower/forms/staff/staff_register_form/address_form.dart';
 
 class StaffRegistrationForm extends StatefulWidget {
   @override

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:littleflower/layout/student_register_form/address_form.dart';
-import 'package:littleflower/layout/student_register_form/emergency_form.dart';
-import 'package:littleflower/layout/student_register_form/parent_guardian_form.dart';
-import 'package:littleflower/layout/student_register_form/physiological_form.dart';
-import 'package:littleflower/layout/student_register_form/student_form.dart';
+import 'package:littleflower/forms/student/student_register_form/address_form.dart';
+import 'package:littleflower/forms/student/student_register_form/emergency_form.dart';
+import 'package:littleflower/forms/student/student_register_form/parent_guardian_form.dart';
+import 'package:littleflower/forms/student/student_register_form/physiological_form.dart';
+import 'package:littleflower/forms/student/student_register_form/student_form.dart';
 
 class SchoolRegistrationForm extends StatefulWidget {
   @override
