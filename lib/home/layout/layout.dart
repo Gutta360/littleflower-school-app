@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:littleflower/layout/login.dart';
-import 'package:littleflower/forms/staff/staff_register_form/staff_register_form.dart';
-import 'package:littleflower/forms/staff/staff_register_form_details/staff_register_form_details.dart';
-import 'package:littleflower/forms/student/student_register_form/student_register_form.dart';
-import 'package:littleflower/forms/student/student_register_form_details/student_register_form_details.dart';
+import 'package:littleflower/home/tabs/login/login.dart';
+import 'package:littleflower/home/tabs/staff/layout/staff.dart';
+import 'package:littleflower/home/tabs/staff_details/layout/staff_details.dart';
+import 'package:littleflower/home/tabs/student/layout/student.dart';
+import 'package:littleflower/home/tabs/student_details/layout/student_details.dart';
 import 'package:littleflower/main.dart';
 import 'package:provider/provider.dart';
 
@@ -48,8 +48,8 @@ class _LayoutWidgetState extends State<LayoutWidget> {
                 text: 'Staff Details',
               ),
               Tab(
-                icon: Icon(Icons.payment),
-                text: 'Payments',
+                icon: Icon(Icons.account_box),
+                text: 'Accounts',
               ),
               Tab(
                 icon: Icon(Icons.inventory),

@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:littleflower/forms/staff/staff_register_form/staff_form.dart';
-import 'package:littleflower/forms/staff/staff_register_form/address_form.dart';
+import 'package:littleflower/home/layout/layout.dart';
+import 'package:littleflower/home/tabs/staff_details/tabs/staff.dart';
+import 'package:littleflower/home/tabs/staff_details/tabs/address.dart';
 
-class StaffRegistrationForm extends StatefulWidget {
+class StaffRegistrationFormDetails extends StatefulWidget {
   @override
-  _StaffRegistrationFormState createState() => _StaffRegistrationFormState();
+  _StaffRegistrationFormDetailsState createState() =>
+      _StaffRegistrationFormDetailsState();
 }
 
-class _StaffRegistrationFormState extends State<StaffRegistrationForm> {
+class _StaffRegistrationFormDetailsState
+    extends State<StaffRegistrationFormDetails> {
   final _formKey = GlobalKey<FormState>();
   int _currentStep = 0;
 
@@ -70,7 +73,13 @@ class _StaffRegistrationFormState extends State<StaffRegistrationForm> {
                       currentSalaryController: _currentSalaryController,
                       originalCertificatesController:
                           _originalCertificatesController,
-                      agreementPeriodController: _agreementPeriodController),
+                      agreementPeriodController: _agreementPeriodController,
+                      addressNameController: _addressNameController,
+                      addressLine1Controller: _addressLine1Controller,
+                      addressLine2Controller: _addressLine2Controller,
+                      cityController: _cityController,
+                      stateController: _stateController,
+                      zipCodeController: _zipCodeController),
                   AddressForm(
                     addressNameController: _addressNameController,
                     addressLine1Controller: _addressLine1Controller,
@@ -169,31 +178,67 @@ class _StaffRegistrationFormState extends State<StaffRegistrationForm> {
               child: Text("Back"),
             ),
           ),
-        Padding(
-          padding: const EdgeInsets.fromLTRB(
-              20.0, 0.0, 20.0, 20.0), // Left, Top, Right, Bottom
-          child: ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              foregroundColor: Colors.white,
-              backgroundColor: Colors.blue,
-              padding: const EdgeInsets.symmetric(vertical: 14),
-              minimumSize: const Size(120, 40),
-              textStyle: const TextStyle(
-                fontSize: 15,
+        if (_currentStep < 1)
+          Padding(
+            padding: const EdgeInsets.fromLTRB(
+                20.0, 0.0, 20.0, 20.0), // Left, Top, Right, Bottom
+            child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                foregroundColor: Colors.white,
+                backgroundColor: Colors.blue,
+                padding: const EdgeInsets.symmetric(vertical: 14),
+                minimumSize: const Size(120, 40),
+                textStyle: const TextStyle(
+                  fontSize: 15,
+                ),
               ),
-            ),
-            onPressed: () {
-              if (_currentStep < 1) {
+              onPressed: () {
                 setState(() {
                   _currentStep++;
                 });
-              } else {
-                _saveForm();
-              }
-            },
-            child: Text(_currentStep < 1 ? "Next" : "Save"),
+              },
+              child: Text("Next"),
+            ),
           ),
-        ),
+        if (_currentStep == 1)
+          Row(
+            children: [
+              Padding(
+                padding: const EdgeInsets.fromLTRB(
+                    10.0, 0.0, 10.0, 20.0), // Left, Top, Right, Bottom
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    foregroundColor: Colors.white,
+                    backgroundColor: Colors.green,
+                    padding: const EdgeInsets.symmetric(vertical: 14),
+                    minimumSize: const Size(120, 40),
+                    textStyle: const TextStyle(
+                      fontSize: 15,
+                    ),
+                  ),
+                  onPressed: _updateForm,
+                  child: Text("Update"),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(
+                    10.0, 0.0, 10.0, 20.0), // Left, Top, Right, Bottom
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    foregroundColor: Colors.white,
+                    backgroundColor: Colors.red,
+                    padding: const EdgeInsets.symmetric(vertical: 14),
+                    minimumSize: const Size(120, 40),
+                    textStyle: const TextStyle(
+                      fontSize: 15,
+                    ),
+                  ),
+                  onPressed: _deleteForm,
+                  child: Text("Delete"),
+                ),
+              ),
+            ],
+          ),
       ],
     );
   }
@@ -272,6 +317,102 @@ class _StaffRegistrationFormState extends State<StaffRegistrationForm> {
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("Error saving data: $e")),
+      );
+    }
+  }
+
+  Future<void> _updateForm() async {
+    if (!_formKey.currentState!.validate()) {
+      _showError("Please fill all required fields");
+      return;
+    }
+
+    try {
+      // Query to find the document with the matching staff name
+      QuerySnapshot existingStaff = await FirebaseFirestore.instance
+          .collection("staff")
+          .where("staff_name", isEqualTo: _nameController.text)
+          .get();
+
+      if (existingStaff.docs.isNotEmpty) {
+        String staffId = existingStaff.docs.first.id; // Get the document ID
+
+        // Update the form data in Firestore
+        await FirebaseFirestore.instance
+            .collection("staff")
+            .doc(staffId)
+            .update({
+          "staff_name": _nameController.text,
+          "staff_fatherorhusband_name": _fatherHusbandNameController.text,
+          "staff_aadhar_no": _aadharNoController.text,
+          "staff_educational_qualification":
+              _educationalQualificationController.text,
+          "staff_other_skills": _otherSkillsController.text,
+          "staff_marital_status": _maritalStatusController.value,
+          "staff_children": _childrenController.text,
+          "staff_experience": _experienceController.text,
+          "staff_previous_salary": _previousSalaryController.text,
+          "staff_expected_salary": _expectedSalaryController.text,
+          "staff_current_salary": _currentSalaryController.text,
+          "staff_original_certificates": _originalCertificatesController.text,
+          "staff_agreement_period": _agreementPeriodController.text,
+          "address_name": _addressNameController.text,
+          "address_line1": _addressLine1Controller.text,
+          "address_line2": _addressLine2Controller.text,
+          "address_city": _cityController.text,
+          "address_state": _stateController.text,
+          "address_zip": _zipCodeController.text
+        });
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Data updated successfully!")),
+        );
+      } else {
+        _showError("No staff member found with the given name.");
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Error updating data: $e")),
+      );
+    }
+  }
+
+  Future<void> _deleteForm() async {
+    try {
+      // Query to find the document with the matching staff name
+      QuerySnapshot existingStaff = await FirebaseFirestore.instance
+          .collection("staff")
+          .where("staff_name", isEqualTo: _nameController.text)
+          .get();
+
+      if (existingStaff.docs.isNotEmpty) {
+        String staffId = existingStaff.docs.first.id; // Get the document ID
+
+        // Delete the document from Firestore
+        await FirebaseFirestore.instance
+            .collection("staff")
+            .doc(staffId)
+            .delete();
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Data deleted successfully!")),
+        );
+
+        // Clear the form after deletion
+        _formKey.currentState?.reset();
+
+        // Navigate to LayoutWidget
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(
+            builder: (context) => LayoutWidget(),
+          ),
+        );
+      } else {
+        _showError("No staff member found with the given name.");
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Error deleting data: $e")),
       );
     }
   }
