@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:littleflower/home/layout/layout.dart';
+import 'package:littleflower/layouts/home.dart';
 import 'package:littleflower/main.dart';
 import 'package:provider/provider.dart';
 
@@ -21,7 +21,7 @@ class _LoginPageState extends State<LoginPage> {
   void _logout() {
     Navigator.pushAndRemoveUntil(
       context,
-      MaterialPageRoute(builder: (context) => const LayoutWidget()),
+      MaterialPageRoute(builder: (context) => const HomeLayout()),
       (Route<dynamic> route) => false,
     );
   }
@@ -50,7 +50,7 @@ class _LoginPageState extends State<LoginPage> {
                         Navigator.pushAndRemoveUntil(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => const LayoutWidget()),
+                              builder: (context) => const HomeLayout()),
                           (Route<dynamic> route) => false,
                         );
                       },

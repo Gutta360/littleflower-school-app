@@ -1,17 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:littleflower/home/layout/layout.dart';
-import 'package:littleflower/home/tabs/staff_details/tabs/staff.dart';
-import 'package:littleflower/home/tabs/staff_details/tabs/address.dart';
+import 'package:littleflower/layouts/home.dart';
+import 'package:littleflower/tabs/staff_details/staff.dart';
+import 'package:littleflower/tabs/staff_details/address.dart';
 
-class StaffRegistrationFormDetails extends StatefulWidget {
+class StaffDetailsLayout extends StatefulWidget {
   @override
-  _StaffRegistrationFormDetailsState createState() =>
-      _StaffRegistrationFormDetailsState();
+  _StaffDetailsLayoutState createState() => _StaffDetailsLayoutState();
 }
 
-class _StaffRegistrationFormDetailsState
-    extends State<StaffRegistrationFormDetails> {
+class _StaffDetailsLayoutState extends State<StaffDetailsLayout> {
   final _formKey = GlobalKey<FormState>();
   int _currentStep = 0;
 
@@ -404,7 +402,7 @@ class _StaffRegistrationFormDetailsState
         // Navigate to LayoutWidget
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(
-            builder: (context) => LayoutWidget(),
+            builder: (context) => HomeLayout(),
           ),
         );
       } else {

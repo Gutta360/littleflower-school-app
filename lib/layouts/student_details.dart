@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:littleflower/home/tabs/student/tabs/address.dart';
-import 'package:littleflower/home/tabs/student/tabs/emergency.dart';
-import 'package:littleflower/home/tabs/student/tabs/parent_guardian.dart';
-import 'package:littleflower/home/tabs/student/tabs/physiological.dart';
-import 'package:littleflower/home/tabs/student/tabs/student.dart';
+import 'package:littleflower/tabs/student_details/address.dart';
+import 'package:littleflower/tabs/student_details/emergency.dart';
+import 'package:littleflower/tabs/student_details/parent_guardian.dart';
+import 'package:littleflower/tabs/student_details/physiological.dart';
+import 'package:littleflower/tabs/student_details/student.dart';
 
-class SchoolRegistrationForm extends StatefulWidget {
+class StudentDetailsLayout extends StatefulWidget {
   @override
-  _SchoolRegistrationFormState createState() => _SchoolRegistrationFormState();
+  _StudentDetailsLayoutState createState() => _StudentDetailsLayoutState();
 }
 
-class _SchoolRegistrationFormState extends State<SchoolRegistrationForm> {
+class _StudentDetailsLayoutState extends State<StudentDetailsLayout> {
   final _formKey = GlobalKey<FormState>();
   int _currentStep = 0;
 
@@ -92,6 +92,35 @@ class _SchoolRegistrationFormState extends State<SchoolRegistrationForm> {
                     nationalityController: _nationalityController,
                     casteController: _casteController,
                     previousSchoolController: _previousSchoolController,
+                    fatherNameController: _fatherNameController,
+                    fatherPhoneController: _fatherPhoneController,
+                    fatherEmailController: _fatherEmailController,
+                    fatherOccupationController: _fatherOccupationController,
+                    motherNameController: _motherNameController,
+                    motherPhoneController: _motherPhoneController,
+                    motherEmailController: _motherEmailController,
+                    motherOccupationController: _motherOccupationController,
+                    sibling1Controller: _sibling1Controller,
+                    sibling1SchoolController: _sibling1SchoolController,
+                    sibling1ClassController: _sibling1ClassController,
+                    sibling2Controller: _sibling2Controller,
+                    sibling2SchoolController: _sibling2SchoolController,
+                    sibling2ClassController: _sibling2ClassController,
+                    emergencyNameController: _emergencyNameController,
+                    emergencyRelationshipController:
+                        _emergencyRelationshipController,
+                    emergencyPhoneController: _emergencyPhoneController,
+                    addressNameController: _addressNameController,
+                    addressLine1Controller: _addressLine1Controller,
+                    addressLine2Controller: _addressLine2Controller,
+                    cityController: _cityController,
+                    stateController: _stateController,
+                    zipCodeController: _zipCodeController,
+                    placeInFamilyController: _placeInFamilyController,
+                    childrenAroundController: _childrenAroundController,
+                    attachedToController: _attachedToController,
+                    likingsController: _likingsController,
+                    dislikingsController: _dislikingsController,
                   ),
                   ParentGuardianForm(
                     fatherNameController: _fatherNameController,
@@ -229,33 +258,175 @@ class _SchoolRegistrationFormState extends State<SchoolRegistrationForm> {
               child: Text("Back"),
             ),
           ),
-        Padding(
-          padding: const EdgeInsets.fromLTRB(
-              20.0, 0.0, 20.0, 20.0), // Left, Top, Right, Bottom
-          child: ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              foregroundColor: Colors.white,
-              backgroundColor: Colors.blue,
-              padding: const EdgeInsets.symmetric(vertical: 14),
-              minimumSize: const Size(120, 40),
-              textStyle: const TextStyle(
-                fontSize: 15,
+        if (_currentStep < 4)
+          Padding(
+            padding: const EdgeInsets.fromLTRB(
+                20.0, 0.0, 20.0, 20.0), // Left, Top, Right, Bottom
+            child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                foregroundColor: Colors.white,
+                backgroundColor: Colors.blue,
+                padding: const EdgeInsets.symmetric(vertical: 14),
+                minimumSize: const Size(120, 40),
+                textStyle: const TextStyle(
+                  fontSize: 15,
+                ),
               ),
-            ),
-            onPressed: () {
-              if (_currentStep < 4) {
+              onPressed: () {
                 setState(() {
                   _currentStep++;
                 });
-              } else {
-                _saveForm();
-              }
-            },
-            child: Text(_currentStep < 4 ? "Next" : "Save"),
+              },
+              child: Text("Next"),
+            ),
           ),
-        ),
+        if (_currentStep == 4)
+          Row(
+            children: [
+              Padding(
+                padding: const EdgeInsets.fromLTRB(
+                    10.0, 0.0, 10.0, 20.0), // Left, Top, Right, Bottom
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    foregroundColor: Colors.white,
+                    backgroundColor: Colors.green,
+                    padding: const EdgeInsets.symmetric(vertical: 14),
+                    minimumSize: const Size(120, 40),
+                    textStyle: const TextStyle(
+                      fontSize: 15,
+                    ),
+                  ),
+                  onPressed: _updateForm,
+                  child: Text("Update"),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(
+                    10.0, 0.0, 10.0, 20.0), // Left, Top, Right, Bottom
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    foregroundColor: Colors.white,
+                    backgroundColor: Colors.red,
+                    padding: const EdgeInsets.symmetric(vertical: 14),
+                    minimumSize: const Size(120, 40),
+                    textStyle: const TextStyle(
+                      fontSize: 15,
+                    ),
+                  ),
+                  onPressed: _deleteForm,
+                  child: Text("Delete"),
+                ),
+              ),
+            ],
+          ),
       ],
     );
+  }
+
+  Future<void> _updateForm() async {
+    if (!_formKey.currentState!.validate()) {
+      _showError("Please fill all required fields");
+      return;
+    }
+
+    try {
+      // Query to find the document with the matching student_name
+      QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+          .collection("students")
+          .where("student_name", isEqualTo: _nameController.text)
+          .get();
+
+      // Check if a matching document exists
+      if (querySnapshot.docs.isNotEmpty) {
+        // Assuming there's only one document with the matching name
+        String docId = querySnapshot.docs.first.id;
+
+        // Update the document
+        await FirebaseFirestore.instance
+            .collection("students")
+            .doc(docId)
+            .update({
+          "student_name": _nameController.text,
+          "student_dob": _dobController.text,
+          "student_mother_tongue": _motherTongueController.value,
+          "student_gender": _genderController.value,
+          "student_grade": _gradeController.value,
+          "student_caste": _casteController.value,
+          "student_religion": _religionController.value,
+          "student_nationality": _nationalityController.value,
+          "student_previous_school": _previousSchoolController.text,
+          "father_name": _fatherNameController.text,
+          "father_phone": _fatherPhoneController.text,
+          "father_email": _fatherEmailController.text,
+          "father_occupation": _fatherOccupationController.text,
+          "mother_name": _motherNameController.text,
+          "mother_phone": _motherPhoneController.text,
+          "mother_email": _motherEmailController.text,
+          "mother_occupation": _motherOccupationController.text,
+          "sibling1_name": _sibling1Controller.text,
+          "sibling1_school": _sibling1SchoolController.text,
+          "sibling1_class": _sibling1ClassController.text,
+          "sibling2_name": _sibling2Controller.text,
+          "sibling2_school": _sibling2SchoolController.text,
+          "sibling2_class": _sibling2ClassController.text,
+          "emergency_name": _emergencyNameController.text,
+          "emergency_relationship": _emergencyRelationshipController.text,
+          "emergency_phone": _emergencyPhoneController.text,
+          "address_name": _addressNameController.text,
+          "address_line1": _addressLine1Controller.text,
+          "address_line2": _addressLine2Controller.text,
+          "address_city": _cityController.text,
+          "address_state": _stateController.text,
+          "address_zip": _zipCodeController.text,
+          "physcological_placeofthechild": _placeInFamilyController.value,
+          "physcological_children_around": _childrenAroundController.value,
+          "physcological_attachedto": _attachedToController.text,
+          "physcological_likings": _likingsController.text,
+          "physcological_dislikings": _dislikingsController.text,
+        });
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Data updated successfully!")),
+        );
+      } else {
+        _showError("No student found with the given name.");
+      }
+    } catch (e) {
+      _showError("Error updating data: $e");
+    }
+  }
+
+  Future<void> _deleteForm() async {
+    try {
+      // Query to find the document with the matching student_name
+      QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+          .collection("students")
+          .where("student_name", isEqualTo: _nameController.text)
+          .get();
+
+      // Check if a matching document exists
+      if (querySnapshot.docs.isNotEmpty) {
+        // Assuming there's only one document with the matching name
+        String docId = querySnapshot.docs.first.id;
+
+        // Delete the document
+        await FirebaseFirestore.instance
+            .collection("students")
+            .doc(docId)
+            .delete();
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Data deleted successfully!")),
+        );
+
+        // Clear the form after deletion
+        _formKey.currentState?.reset();
+      } else {
+        _showError("No student found with the given name.");
+      }
+    } catch (e) {
+      _showError("Error deleting data: $e");
+    }
   }
 
   void _showError(String message) {

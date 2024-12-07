@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:littleflower/home/tabs/staff/tabs/staff.dart';
-import 'package:littleflower/home/tabs/staff/tabs/address.dart';
+import 'package:littleflower/tabs/staff/staff.dart';
+import 'package:littleflower/tabs/staff/address.dart';
 
-class StaffRegistrationForm extends StatefulWidget {
+class StaffLayout extends StatefulWidget {
   @override
-  _StaffRegistrationFormState createState() => _StaffRegistrationFormState();
+  _StaffLayoutState createState() => _StaffLayoutState();
 }
 
-class _StaffRegistrationFormState extends State<StaffRegistrationForm> {
+class _StaffLayoutState extends State<StaffLayout> {
   final _formKey = GlobalKey<FormState>();
   int _currentStep = 0;
 
