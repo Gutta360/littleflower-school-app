@@ -221,7 +221,7 @@ class _StaffFormState extends State<StaffForm> {
           context: context,
           label: "Previous Salary",
           hint: "Enter decimal values only",
-          icon: Icons.attach_money,
+          icon: Icons.currency_rupee_outlined,
         ),
         _buildDecimalField(
           controller: widget.expectedSalaryController,

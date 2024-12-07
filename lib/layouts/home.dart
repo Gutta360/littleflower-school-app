@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:littleflower/layouts/accounts.dart';
 import 'package:littleflower/layouts/student.dart';
+import 'package:littleflower/tabs/login/home_page.dart';
 import 'package:littleflower/tabs/login/loggedIn.dart';
-import 'package:littleflower/tabs/login/login.dart';
 import 'package:littleflower/layouts/staff.dart';
 import 'package:littleflower/layouts/staff_details.dart';
 import 'package:littleflower/layouts/student_details.dart';
@@ -51,7 +52,7 @@ class _HomeLayoutState extends State<HomeLayout> {
                 text: 'Staff Details',
               ),
               Tab(
-                icon: Icon(Icons.calculate_rounded),
+                icon: Icon(Icons.currency_rupee_rounded),
                 text: 'Accounts',
               ),
               Tab(
@@ -79,7 +80,7 @@ class _HomeLayoutState extends State<HomeLayout> {
             //LoginPage(onLoginSuccess: handleLoginSuccess),
             globalData.isUserLoggedIn
                 ? LoggedInWidget(globalData: globalData)
-                : const LoginPage(),
+                : const HomePage(),
             globalData.isUserLoggedIn
                 ? StudentLayout()
                 : const LoggedOutWidget(),
@@ -91,7 +92,7 @@ class _HomeLayoutState extends State<HomeLayout> {
                 ? StaffDetailsLayout()
                 : const LoggedOutWidget(),
             globalData.isUserLoggedIn
-                ? const UnderProgressWidget()
+                ? const AccountsLayout()
                 : const LoggedOutWidget(),
             globalData.isUserLoggedIn
                 ? const UnderProgressWidget()

@@ -3,10 +3,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 
 class PaymentForm extends StatefulWidget {
-  final TextEditingController nameController;
   const PaymentForm({
     Key? key,
-    required this.nameController,
   }) : super(key: key);
 
   @override
@@ -14,6 +12,9 @@ class PaymentForm extends StatefulWidget {
 }
 
 class _PaymentFormState extends State<PaymentForm> {
+  final _formKey = GlobalKey<FormState>();
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController paymentAmountController = TextEditingController();
   final DateFormat dateFormat = DateFormat("dd-MMM-yyyy");
   List<String> studentNames = [];
   String? selectedStudentName;
@@ -46,16 +47,9 @@ class _PaymentFormState extends State<PaymentForm> {
 
   @override
   Widget build(BuildContext context) {
-    return GridView(
-      padding: const EdgeInsets.symmetric(horizontal: 50.0, vertical: 25.0),
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 3,
-        crossAxisSpacing: 20.0,
-        mainAxisSpacing: 16.0,
-        childAspectRatio: 6,
-      ),
+    return ListView(
+      padding: const EdgeInsets.symmetric(horizontal: 400.0, vertical: 25.0),
       children: [
-        // Updated Name Field as Dropdown
         DropdownButtonFormField<String>(
           decoration: const InputDecoration(
             labelText: "Name",
@@ -69,7 +63,7 @@ class _PaymentFormState extends State<PaymentForm> {
           onChanged: (value) {
             setState(() {
               selectedStudentName = value;
-              widget.nameController.text = value ?? '';
+              nameController.text = value ?? '';
             });
             if (value != null) {
               //_populateFields(value);
@@ -77,8 +71,103 @@ class _PaymentFormState extends State<PaymentForm> {
           },
           validator: (value) =>
               value == null || value.isEmpty ? "Name is required" : null,
-        )
+        ),
+        const SizedBox(height: 16),
+        _buildDecimalField(
+          controller: paymentAmountController,
+          context: context,
+          label: "Amount",
+          hint: "Enter decimal values only",
+          icon: Icons.currency_rupee_outlined,
+        ),
       ],
     );
+  }
+
+  Widget _buildDecimalField({
+    required TextEditingController controller,
+    required BuildContext context,
+    required String label,
+    required String hint,
+    required IconData icon,
+  }) {
+    return TextFormField(
+      controller: controller,
+      decoration: InputDecoration(
+        labelText: label,
+        hintText: hint,
+        prefixIcon: Icon(icon),
+      ),
+      keyboardType: TextInputType.numberWithOptions(decimal: true),
+      onChanged: (value) {
+        final decimalValue = value.replaceAll(RegExp(r'[^0-9.]'), '');
+        if (value != decimalValue) {
+          controller.value = TextEditingValue(
+            text: decimalValue,
+            selection: TextSelection.collapsed(offset: decimalValue.length),
+          );
+        }
+      },
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return "$label is required";
+        }
+        if (!RegExp(r'^\d+(\.\d+)?$').hasMatch(value)) {
+          return "Only decimal values are allowed";
+        }
+        return null;
+      },
+    );
+  }
+
+  void _showError(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: Colors.red,
+      ),
+    );
+  }
+
+  Future<void> _saveForm() async {
+    if (!_formKey.currentState!.validate()) {
+      _showError("Please fill all required fields");
+      return;
+    }
+
+    try {
+      // Fetch the current counter value from Firestore
+      DocumentSnapshot counterDoc = await FirebaseFirestore.instance
+          .collection("counters")
+          .doc("payment_counter")
+          .get();
+
+      int currentCounter = counterDoc["value"];
+      String paymentId = "BILL${currentCounter.toString().padLeft(4, '0')}";
+
+      // Save the form data to the "payments" collection
+      await FirebaseFirestore.instance
+          .collection("payments")
+          .doc(paymentId)
+          .set({
+        "id": paymentId,
+        "student_name": nameController.text,
+        "amount": paymentAmountController.text,
+      });
+
+      // Increment the counter in Firestore
+      await FirebaseFirestore.instance
+          .collection("counters")
+          .doc("payment_counter")
+          .update({"value": currentCounter + 1});
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Data saved successfully!")),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Error saving data: $e")),
+      );
+    }
   }
 }
