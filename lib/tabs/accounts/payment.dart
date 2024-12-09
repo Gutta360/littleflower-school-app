@@ -15,7 +15,7 @@ class _PaymentFormState extends State<PaymentForm> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController nameController = TextEditingController();
   final TextEditingController paymentAmountController = TextEditingController();
-  final DateFormat dateFormat = DateFormat("dd-MMM-yyyy");
+  final DateFormat dateFormat = DateFormat("dd-MM-yyyy HH:mm:ss");
   List<String> studentNames = [];
   String? selectedStudentName;
 
@@ -47,41 +47,55 @@ class _PaymentFormState extends State<PaymentForm> {
 
   @override
   Widget build(BuildContext context) {
-    return ListView(
-      padding: const EdgeInsets.symmetric(horizontal: 400.0, vertical: 25.0),
-      children: [
-        DropdownButtonFormField<String>(
-          decoration: const InputDecoration(
-            labelText: "Name",
-            hintText: "Capitals and Space only. Ex: NAME SURNAME",
-            prefixIcon: Icon(Icons.account_circle),
-          ),
-          value: selectedStudentName,
-          items: studentNames
-              .map((name) => DropdownMenuItem(value: name, child: Text(name)))
-              .toList(),
-          onChanged: (value) {
-            setState(() {
-              selectedStudentName = value;
-              nameController.text = value ?? '';
-            });
-            if (value != null) {
-              //_populateFields(value);
-            }
-          },
-          validator: (value) =>
-              value == null || value.isEmpty ? "Name is required" : null,
-        ),
-        const SizedBox(height: 16),
-        _buildDecimalField(
-          controller: paymentAmountController,
-          context: context,
-          label: "Amount",
-          hint: "Enter decimal values only",
-          icon: Icons.currency_rupee_outlined,
-        ),
-      ],
-    );
+    return Form(
+        key: _formKey,
+        child: ListView(
+          padding:
+              const EdgeInsets.symmetric(horizontal: 400.0, vertical: 25.0),
+          children: [
+            DropdownButtonFormField<String>(
+              decoration: const InputDecoration(
+                labelText: "Name",
+                hintText: "Capitals and Space only. Ex: NAME SURNAME",
+                prefixIcon: Icon(Icons.account_circle),
+              ),
+              value: selectedStudentName,
+              items: studentNames
+                  .map((name) =>
+                      DropdownMenuItem(value: name, child: Text(name)))
+                  .toList(),
+              onChanged: (value) {
+                setState(() {
+                  selectedStudentName = value;
+                  nameController.text = value ?? '';
+                });
+              },
+              validator: (value) =>
+                  value == null || value.isEmpty ? "Name is required" : null,
+            ),
+            const SizedBox(height: 16),
+            _buildDecimalField(
+              controller: paymentAmountController,
+              context: context,
+              label: "Amount",
+              hint: "Enter decimal values only",
+              icon: Icons.currency_rupee_outlined,
+            ),
+            const SizedBox(height: 38),
+            Center(
+              child: ElevatedButton(
+                onPressed: _submitForm,
+                style: ElevatedButton.styleFrom(
+                  foregroundColor: Colors.white,
+                  backgroundColor: Colors.blue,
+                  minimumSize: const Size(120, 40), // Ensures the button size
+                  textStyle: const TextStyle(fontSize: 15),
+                ),
+                child: const Text('Submit'),
+              ),
+            ),
+          ],
+        ));
   }
 
   Widget _buildDecimalField({
@@ -98,7 +112,7 @@ class _PaymentFormState extends State<PaymentForm> {
         hintText: hint,
         prefixIcon: Icon(icon),
       ),
-      keyboardType: TextInputType.numberWithOptions(decimal: true),
+      keyboardType: const TextInputType.numberWithOptions(decimal: true),
       onChanged: (value) {
         final decimalValue = value.replaceAll(RegExp(r'[^0-9.]'), '');
         if (value != decimalValue) {
@@ -129,7 +143,7 @@ class _PaymentFormState extends State<PaymentForm> {
     );
   }
 
-  Future<void> _saveForm() async {
+  Future<void> _submitForm() async {
     if (!_formKey.currentState!.validate()) {
       _showError("Please fill all required fields");
       return;
@@ -145,6 +159,9 @@ class _PaymentFormState extends State<PaymentForm> {
       int currentCounter = counterDoc["value"];
       String paymentId = "BILL${currentCounter.toString().padLeft(4, '0')}";
 
+      // Get the current date as a Timestamp
+      Timestamp currentTimestamp = Timestamp.now();
+
       // Save the form data to the "payments" collection
       await FirebaseFirestore.instance
           .collection("payments")
@@ -153,6 +170,7 @@ class _PaymentFormState extends State<PaymentForm> {
         "id": paymentId,
         "student_name": nameController.text,
         "amount": paymentAmountController.text,
+        "payment_date": currentTimestamp, // Save the timestamp
       });
 
       // Increment the counter in Firestore
@@ -162,7 +180,7 @@ class _PaymentFormState extends State<PaymentForm> {
           .update({"value": currentCounter + 1});
 
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Data saved successfully!")),
+        const SnackBar(content: Text("Data saved successfully!")),
       );
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(

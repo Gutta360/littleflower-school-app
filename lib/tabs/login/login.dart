@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class LoginForm extends StatelessWidget {
   final GlobalKey<FormState> formKey;
@@ -22,67 +23,75 @@ class LoginForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Form(
-      key: formKey,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          TextFormField(
-            controller: emailController,
-            keyboardType: TextInputType.emailAddress,
-            decoration: const InputDecoration(
-              labelText: 'Email',
-              prefixIcon: Icon(Icons.email),
+    return RawKeyboardListener(
+      focusNode: FocusNode(),
+      onKey: (RawKeyEvent event) {
+        if (event.isKeyPressed(LogicalKeyboardKey.enter)) {
+          onLoginPressed(); // Trigger the login action when Enter is pressed
+        }
+      },
+      child: Form(
+        key: formKey,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            TextFormField(
+              controller: emailController,
+              keyboardType: TextInputType.emailAddress,
+              decoration: const InputDecoration(
+                labelText: 'Email',
+                prefixIcon: Icon(Icons.email),
+              ),
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Please enter an email';
+                } else if (!RegExp(
+                        r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$")
+                    .hasMatch(value)) {
+                  return 'Please enter a valid email';
+                }
+                return null;
+              },
+              onChanged: onEmailChanged,
             ),
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Please enter an email';
-              } else if (!RegExp(
-                      r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$")
-                  .hasMatch(value)) {
-                return 'Please enter a valid email';
-              }
-              return null;
-            },
-            onChanged: onEmailChanged,
-          ),
-          const SizedBox(height: 16),
-          TextFormField(
-            controller: passwordController,
-            obscureText: true,
-            decoration: const InputDecoration(
-              labelText: 'Password',
-              prefixIcon: Icon(Icons.lock),
+            const SizedBox(height: 16),
+            TextFormField(
+              controller: passwordController,
+              obscureText: true,
+              decoration: const InputDecoration(
+                labelText: 'Password',
+                prefixIcon: Icon(Icons.lock),
+              ),
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Please enter a password';
+                }
+                return null;
+              },
+              onChanged: onPasswordChanged,
             ),
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Please enter a password';
-              }
-              return null;
-            },
-            onChanged: onPasswordChanged,
-          ),
-          const SizedBox(height: 38),
-          ElevatedButton(
-            onPressed: onLoginPressed,
-            style: ElevatedButton.styleFrom(
-              foregroundColor: Colors.white,
-              backgroundColor: Colors.blue,
-              padding: const EdgeInsets.symmetric(vertical: 14),
-              minimumSize: const Size(120, 40),
-              textStyle: const TextStyle(fontSize: 15),
+            const SizedBox(height: 38),
+            ElevatedButton(
+              onPressed: onLoginPressed,
+              style: ElevatedButton.styleFrom(
+                foregroundColor: Colors.white,
+                backgroundColor: Colors.blue,
+                padding: const EdgeInsets.symmetric(vertical: 14),
+                minimumSize: const Size(120, 40),
+                textStyle: const TextStyle(fontSize: 15),
+              ),
+              child: const Text('Login'),
             ),
-            child: const Text('Login'),
-          ),
-          const SizedBox(height: 16),
-          TextButton(
-            onPressed: onForgotPassword,
-            child: const Text(
-              'Forgot Password?',
-              style: TextStyle(color: Colors.blue),
+            const SizedBox(height: 16),
+            TextButton(
+              onPressed: onForgotPassword,
+              child: const Text(
+                'Forgot Password?',
+                style: TextStyle(color: Colors.blue),
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

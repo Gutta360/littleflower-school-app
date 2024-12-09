@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:littleflower/tabs/accounts/payment.dart';
+import 'package:littleflower/tabs/accounts/payment_details.dart';
 import 'package:littleflower/utils/under_progress.dart';
 
 class AccountsLayout extends StatefulWidget {
@@ -51,7 +52,7 @@ class AccountsLayoutState extends State<AccountsLayout> {
         body: TabBarView(
           children: [
             PaymentForm(),
-            const UnderProgressWidget(),
+            PaymentDetailsForm(),
             const UnderProgressWidget(),
             const UnderProgressWidget(),
           ],
