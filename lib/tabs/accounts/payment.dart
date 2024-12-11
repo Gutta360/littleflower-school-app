@@ -143,6 +143,70 @@ class _PaymentFormState extends State<PaymentForm> {
     );
   }
 
+  void _showDetailsDialog({
+    required String date,
+    required String name,
+    required String grade,
+    required String amount,
+    required String billId,
+  }) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+          title: const Text('Payment Details'),
+          content: Card(
+            elevation: 5,
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('Date:        $date',
+                      style: const TextStyle(fontSize: 16)),
+                  const SizedBox(height: 8),
+                  Text('Name:        $name',
+                      style: const TextStyle(fontSize: 16)),
+                  const SizedBox(height: 8),
+                  Text('Grade:       $grade',
+                      style: const TextStyle(fontSize: 16)),
+                  const SizedBox(height: 8),
+                  Text('Paid Amount: $amount',
+                      style: const TextStyle(fontSize: 16)),
+                  const SizedBox(height: 8),
+                  Text('Bill ID:     $billId',
+                      style: const TextStyle(fontSize: 16)),
+                ],
+              ),
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Dismiss the dialog
+              },
+              child: const Text('Cancel'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                // Add Print functionality here
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                      content: Text("Print functionality is not implemented.")),
+                );
+                Navigator.of(context).pop(); // Dismiss the dialog
+              },
+              child: const Text('Print'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   Future<void> _submitForm() async {
     if (!_formKey.currentState!.validate()) {
       _showError("Please fill all required fields");
@@ -161,6 +225,10 @@ class _PaymentFormState extends State<PaymentForm> {
 
       // Get the current date as a Timestamp
       Timestamp currentTimestamp = Timestamp.now();
+      String formattedDate = dateFormat.format(currentTimestamp.toDate());
+
+      // Simulate a grade for demonstration (replace with actual grade if available)
+      String grade = "1";
 
       // Save the form data to the "payments" collection
       await FirebaseFirestore.instance
@@ -178,6 +246,15 @@ class _PaymentFormState extends State<PaymentForm> {
           .collection("counters")
           .doc("payment_counter")
           .update({"value": currentCounter + 1});
+
+      // Show the details dialog with the submitted data
+      _showDetailsDialog(
+        date: formattedDate,
+        name: nameController.text,
+        grade: grade,
+        amount: paymentAmountController.text,
+        billId: paymentId,
+      );
 
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Data saved successfully!")),
