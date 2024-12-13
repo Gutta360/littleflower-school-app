@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:littleflower/tabs/inventory/stock_input.dart';
-import 'package:littleflower/tabs/inventory/stock_management.dart';
+import 'package:littleflower/tabs/inventory/item.dart';
+import 'package:littleflower/tabs/inventory/item_details.dart';
+import 'package:littleflower/tabs/inventory/item_management.dart';
 import 'package:littleflower/tabs/inventory/stock_status.dart';
 
 class InventoryLayout extends StatefulWidget {
@@ -29,17 +30,17 @@ class InventoryLayoutState extends State<InventoryLayout> {
                 Tab(
                   icon: Icon(Icons.inventory_rounded,
                       size: 20), // Adjust icon size
-                  text: 'Stock',
+                  text: 'Items',
                 ),
                 Tab(
                   icon: Icon(Icons.inventory_rounded,
                       size: 20), // Adjust icon size
-                  text: 'Stock Management',
+                  text: 'Items Details',
                 ),
                 Tab(
                   icon: Icon(Icons.list_alt_rounded,
                       size: 20), // Adjust icon size
-                  text: 'Stock Status',
+                  text: 'Items Management',
                 )
               ],
             ),
@@ -48,9 +49,9 @@ class InventoryLayoutState extends State<InventoryLayout> {
         ),
         body: TabBarView(
           children: [
-            Stock(),
-            StockManagement(),
-            StockStatus(),
+            Item(),
+            ItemDetails(),
+            ItemManagement(),
           ],
         ),
       ),

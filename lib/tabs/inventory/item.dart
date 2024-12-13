@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class Stock extends StatelessWidget {
+class Item extends StatelessWidget {
   TextEditingController itemNameController = TextEditingController();
   TextEditingController itemPriceController = TextEditingController();
   TextEditingController availableController = TextEditingController();
