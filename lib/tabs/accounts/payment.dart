@@ -1,6 +1,10 @@
+import 'dart:typed_data';
+import 'dart:html' as html; // Import for web-specific functionality
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
+import 'package:pdf/widgets.dart' as pw;
+import 'package:flutter/foundation.dart'; // For kIsWeb
 
 class PaymentForm extends StatefulWidget {
   const PaymentForm({
@@ -134,15 +138,6 @@ class _PaymentFormState extends State<PaymentForm> {
     );
   }
 
-  void _showError(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        backgroundColor: Colors.red,
-      ),
-    );
-  }
-
   void _showDetailsDialog({
     required String date,
     required String name,
@@ -191,12 +186,10 @@ class _PaymentFormState extends State<PaymentForm> {
               child: const Text('Cancel'),
             ),
             ElevatedButton(
-              onPressed: () {
-                // Add Print functionality here
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                      content: Text("Print functionality is not implemented.")),
-                );
+              onPressed: () async {
+                if (kIsWeb) {
+                  await _generatePdfWeb(date, name, grade, amount, billId);
+                }
                 Navigator.of(context).pop(); // Dismiss the dialog
               },
               child: const Text('Print'),
@@ -209,7 +202,9 @@ class _PaymentFormState extends State<PaymentForm> {
 
   Future<void> _submitForm() async {
     if (!_formKey.currentState!.validate()) {
-      _showError("Please fill all required fields");
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Please fill all required fields")),
+      );
       return;
     }
 
@@ -262,6 +257,49 @@ class _PaymentFormState extends State<PaymentForm> {
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("Error saving data: $e")),
+      );
+    }
+  }
+
+  Future<void> _generatePdfWeb(String date, String name, String grade,
+      String amount, String billId) async {
+    final pdf = pw.Document();
+
+    pdf.addPage(
+      pw.Page(
+        build: (pw.Context context) {
+          return pw.Column(
+            crossAxisAlignment: pw.CrossAxisAlignment.start,
+            children: [
+              pw.Text('Date:        $date', style: pw.TextStyle(fontSize: 16)),
+              pw.SizedBox(height: 8),
+              pw.Text('Name:        $name', style: pw.TextStyle(fontSize: 16)),
+              pw.SizedBox(height: 8),
+              pw.Text('Grade:       $grade', style: pw.TextStyle(fontSize: 16)),
+              pw.SizedBox(height: 8),
+              pw.Text('Paid Amount: $amount',
+                  style: pw.TextStyle(fontSize: 16)),
+              pw.SizedBox(height: 8),
+              pw.Text('Bill ID:     $billId',
+                  style: pw.TextStyle(fontSize: 16)),
+            ],
+          );
+        },
+      ),
+    );
+
+    try {
+      Uint8List pdfBytes = await pdf.save();
+      final blob = html.Blob([pdfBytes]);
+      final url = html.Url.createObjectUrlFromBlob(blob);
+      final anchor = html.AnchorElement(href: url)
+        ..target = 'blank'
+        ..download = '$billId.pdf'
+        ..click();
+      html.Url.revokeObjectUrl(url);
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Failed to save PDF: $e")),
       );
     }
   }

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:littleflower/layouts/accounts.dart';
+import 'package:littleflower/layouts/inventory.dart';
 import 'package:littleflower/layouts/student.dart';
+import 'package:littleflower/tabs/inventory/stock_status.dart';
 import 'package:littleflower/tabs/login/home_page.dart';
 import 'package:littleflower/tabs/login/loggedIn.dart';
 import 'package:littleflower/layouts/staff.dart';
@@ -95,7 +97,7 @@ class _HomeLayoutState extends State<HomeLayout> {
                 ? const AccountsLayout()
                 : const LoggedOutWidget(),
             globalData.isUserLoggedIn
-                ? const UnderProgressWidget()
+                ? const InventoryLayout()
                 : const LoggedOutWidget(),
             globalData.isUserLoggedIn
                 ? const UnderProgressWidget()
