@@ -268,37 +268,30 @@ class _StudentFormState extends State<StudentForm> {
   }
 
   Widget _buildDatePickerField(BuildContext context) {
-    final DateFormat dateFormat = DateFormat("dd-MMM-yyyy");
-    return Center(
-      child: SizedBox(
-        width: MediaQuery.of(context).size.width * 0.3,
-        child: GestureDetector(
-          onTap: () async {
-            DateTime? pickedDate = await showDatePicker(
-              context: context,
-              initialDate: DateTime.now(),
-              firstDate: DateTime(2000),
-              lastDate: DateTime(2101),
-            );
-            if (pickedDate != null) {
-              setState(() {
-                //_selectedDate = pickedDate;
-                widget.dobController.text = dateFormat.format(pickedDate);
-              });
-            }
-          },
-          child: AbsorbPointer(
-            child: TextFormField(
-              controller: widget.dobController,
-              decoration: const InputDecoration(
-                labelText: 'Date of Birth',
-                prefixIcon: Icon(Icons.calendar_today),
-              ),
-              validator: (value) => value == null || value.isEmpty
-                  ? 'Date of Birth is required'
-                  : null,
-            ),
+    return GestureDetector(
+      onTap: () async {
+        DateTime? pickedDate = await showDatePicker(
+          context: context,
+          initialDate: DateTime.now(),
+          firstDate: DateTime(2000),
+          lastDate: DateTime(2101),
+        );
+        if (pickedDate != null) {
+          setState(() {
+            widget.dobController.text = dateFormat.format(pickedDate);
+          });
+        }
+      },
+      child: AbsorbPointer(
+        child: TextFormField(
+          controller: widget.dobController,
+          decoration: const InputDecoration(
+            labelText: 'Date of Birth',
+            prefixIcon: Icon(Icons.calendar_today),
           ),
+          validator: (value) => value == null || value.isEmpty
+              ? 'Date of Birth is required'
+              : null,
         ),
       ),
     );
