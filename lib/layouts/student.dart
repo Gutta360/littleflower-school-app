@@ -165,12 +165,19 @@ class _StudentLayoutState extends State<StudentLayout> {
             stepIcons.length,
             (index) => Column(
               children: [
-                CircleAvatar(
-                  backgroundColor:
-                      _currentStep == index ? Colors.blue : Colors.grey[300],
-                  child: Icon(
-                    stepIcons[index],
-                    color: _currentStep == index ? Colors.white : Colors.grey,
+                GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      _currentStep = index; // Navigate to the clicked step
+                    });
+                  },
+                  child: CircleAvatar(
+                    backgroundColor:
+                        _currentStep == index ? Colors.blue : Colors.grey[300],
+                    child: Icon(
+                      stepIcons[index],
+                      color: _currentStep == index ? Colors.white : Colors.grey,
+                    ),
                   ),
                 ),
                 const SizedBox(height: 8), // Space between icon and label

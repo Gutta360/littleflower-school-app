@@ -80,7 +80,7 @@ class _ItemManagementState extends State<ItemManagement> {
       body: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.all(20.0),
             child: Row(
               children: [
                 Expanded(
@@ -88,7 +88,7 @@ class _ItemManagementState extends State<ItemManagement> {
                     value: selectedItemName,
                     decoration: const InputDecoration(
                       labelText: "Item Name",
-                      border: OutlineInputBorder(),
+                      prefixIcon: Icon(Icons.inventory),
                     ),
                     items: itemNames.map((name) {
                       return DropdownMenuItem(
@@ -110,13 +110,16 @@ class _ItemManagementState extends State<ItemManagement> {
                     value: selectedAvailability,
                     decoration: const InputDecoration(
                       labelText: "Availability",
-                      border: OutlineInputBorder(),
+                      prefixIcon: Icon(Icons.color_lens),
                     ),
                     items: ["ALL", "very low", "low", "enough", "abundant"]
                         .map((label) {
                       return DropdownMenuItem(
                         value: label,
-                        child: Text(label),
+                        child: Text(
+                          label,
+                          style: TextStyle(color: _getColorForLabel(label)),
+                        ),
                       );
                     }).toList(),
                     onChanged: (value) {
@@ -247,6 +250,23 @@ class _ItemManagementState extends State<ItemManagement> {
       return Colors.blue;
     } else {
       return Colors.green;
+    }
+  }
+
+  Color _getColorForLabel(String label) {
+    switch (label) {
+      case "ALL":
+        return Colors.black;
+      case "very low":
+        return Colors.red;
+      case "low":
+        return Colors.orange;
+      case "enough":
+        return Colors.blue;
+      case "abundant":
+        return Colors.green;
+      default:
+        return Colors.black;
     }
   }
 }
