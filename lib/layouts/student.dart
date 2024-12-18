@@ -142,71 +142,73 @@ class _StudentLayoutState extends State<StudentLayout> {
 
   Widget _buildStepProgressIndicatorWithIcons() {
     List<IconData> stepIcons = [
-      Icons.account_circle, // Student Details
-      Icons.people, // Parents Details
-      Icons.phone, // Emergency
-      Icons.home, // Address
-      Icons.health_and_safety, // Certificates
+      Icons.account_circle, // Step 1
+      Icons.people, // Step 2
+      Icons.phone, // Step 3
+      Icons.home, // Step 4
+      Icons.health_and_safety, // Step 5
     ];
 
-    List<String> stepLabels = [
+    List<String> stepContents = [
       "Student Details",
       "Parents Details",
       "Emergency",
       "Address",
-      "Physiological",
+      "Physiological"
     ];
 
-    return Column(
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: List.generate(
-            stepIcons.length,
-            (index) => Column(
+    return Row(
+      children: List.generate(
+        stepIcons.length,
+        (index) {
+          return Expanded(
+            child: Stack(
               children: [
-                GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      _currentStep = index; // Navigate to the clicked step
-                    });
-                  },
-                  child: CircleAvatar(
-                    backgroundColor:
-                        _currentStep == index ? Colors.blue : Colors.grey[300],
-                    child: Icon(
-                      stepIcons[index],
-                      color: _currentStep == index ? Colors.white : Colors.grey,
-                    ),
+                // Background arrow shape
+                ClipPath(
+                  clipper: ArrowClipper(isLast: index == stepIcons.length - 1),
+                  child: Container(
+                    height: 45,
+                    color: _currentStep == index
+                        ? Colors.grey[800] // Active Step
+                        : _currentStep > index
+                            ? Colors.grey[500] // Completed Steps
+                            : Colors.grey[300], // Inactive Step
                   ),
                 ),
-                const SizedBox(height: 8), // Space between icon and label
-                Text(
-                  stepLabels[index],
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: _currentStep == index ? Colors.blue : Colors.grey,
+                // Step Content (Icon)
+                Positioned.fill(
+                  child: Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          stepIcons[index],
+                          size: 25,
+                          color: _currentStep == index
+                              ? Colors.white
+                              : _currentStep > index
+                                  ? Colors.white
+                                  : Colors.grey[700],
+                        ),
+                        Text(
+                          stepContents[index],
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: _currentStep == index
+                                ? Colors.white
+                                : Colors.grey[500],
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ],
             ),
-          ),
-        ),
-        const SizedBox(
-            height: 8), // Space between the step indicators and the rest
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: List.generate(
-            stepIcons.length - 1,
-            (index) => Expanded(
-              child: Divider(
-                color: index < _currentStep ? Colors.blue : Colors.grey,
-                thickness: 2.0,
-              ),
-            ),
-          ),
-        ),
-      ],
+          );
+        },
+      ),
     );
   }
 
@@ -362,4 +364,28 @@ class _StudentLayoutState extends State<StudentLayout> {
       );
     }
   }
+}
+
+class ArrowClipper extends CustomClipper<Path> {
+  final bool isLast;
+
+  ArrowClipper({this.isLast = false});
+
+  @override
+  Path getClip(Size size) {
+    Path path = Path();
+
+    path.moveTo(0, 0);
+    path.lineTo(size.width - (isLast ? 0 : 20), 0);
+    path.lineTo(size.width, size.height / 2);
+    path.lineTo(size.width - (isLast ? 0 : 20), size.height);
+    path.lineTo(0, size.height);
+    path.lineTo(20, size.height / 2);
+    path.close();
+
+    return path;
+  }
+
+  @override
+  bool shouldReclip(CustomClipper oldClipper) => false;
 }

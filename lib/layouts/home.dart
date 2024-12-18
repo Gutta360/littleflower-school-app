@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:littleflower/layouts/accounts.dart';
 import 'package:littleflower/layouts/inventory.dart';
 import 'package:littleflower/layouts/student.dart';
-import 'package:littleflower/tabs/inventory/stock_status.dart';
 import 'package:littleflower/tabs/login/home_page.dart';
 import 'package:littleflower/tabs/login/loggedIn.dart';
 import 'package:littleflower/layouts/staff.dart';
@@ -28,45 +27,6 @@ class _HomeLayoutState extends State<HomeLayout> {
       length: 8,
       child: Scaffold(
         appBar: AppBar(
-          bottom: const TabBar(
-            indicatorColor: Colors.white,
-            labelColor: Colors.black,
-            unselectedLabelColor: Colors.white,
-            tabs: [
-              Tab(
-                icon: Icon(Icons.login),
-                text: 'Login',
-              ),
-              Tab(
-                icon: Icon(Icons.school),
-                text: 'Student',
-              ),
-              Tab(
-                icon: Icon(Icons.account_circle),
-                text: 'Student Details',
-              ),
-              Tab(
-                icon: Icon(Icons.group),
-                text: 'Staff',
-              ),
-              Tab(
-                icon: Icon(Icons.badge),
-                text: 'Staff Details',
-              ),
-              Tab(
-                icon: Icon(Icons.currency_rupee_rounded),
-                text: 'Accounts',
-              ),
-              Tab(
-                icon: Icon(Icons.inventory),
-                text: 'Inventory',
-              ),
-              Tab(
-                icon: Icon(Icons.build_circle),
-                text: 'Utilities',
-              ),
-            ],
-          ),
           title: const Text(
             'A Little Flower The Leader',
             style: TextStyle(
@@ -77,31 +37,120 @@ class _HomeLayoutState extends State<HomeLayout> {
           centerTitle: true,
           backgroundColor: Colors.blue,
         ),
-        body: TabBarView(
+        body: Row(
           children: [
-            //LoginPage(onLoginSuccess: handleLoginSuccess),
-            globalData.isUserLoggedIn
-                ? LoggedInWidget(globalData: globalData)
-                : const HomePage(),
-            globalData.isUserLoggedIn
-                ? StudentLayout()
-                : const LoggedOutWidget(),
-            globalData.isUserLoggedIn
-                ? StudentDetailsLayout()
-                : const LoggedOutWidget(),
-            globalData.isUserLoggedIn ? StaffLayout() : const LoggedOutWidget(),
-            globalData.isUserLoggedIn
-                ? StaffDetailsLayout()
-                : const LoggedOutWidget(),
-            globalData.isUserLoggedIn
-                ? const AccountsLayout()
-                : const LoggedOutWidget(),
-            globalData.isUserLoggedIn
-                ? const InventoryLayout()
-                : const LoggedOutWidget(),
-            globalData.isUserLoggedIn
-                ? const UnderProgressWidget()
-                : const LoggedOutWidget(),
+            // Left side vertical tabs
+            Container(
+              width: 150, // Adjust width as needed
+              color: Colors.grey[200],
+              child: ListView(
+                children: const [
+                  TabTile(
+                    icon: Icons.login,
+                    label: 'Login',
+                    tabIndex: 0,
+                  ),
+                  TabTile(
+                    icon: Icons.school,
+                    label: 'Student',
+                    tabIndex: 1,
+                  ),
+                  TabTile(
+                    icon: Icons.account_circle,
+                    label: 'Student Details',
+                    tabIndex: 2,
+                  ),
+                  TabTile(
+                    icon: Icons.group,
+                    label: 'Staff',
+                    tabIndex: 3,
+                  ),
+                  TabTile(
+                    icon: Icons.badge,
+                    label: 'Staff Details',
+                    tabIndex: 4,
+                  ),
+                  TabTile(
+                    icon: Icons.currency_rupee_rounded,
+                    label: 'Accounts',
+                    tabIndex: 5,
+                  ),
+                  TabTile(
+                    icon: Icons.inventory,
+                    label: 'Inventory',
+                    tabIndex: 6,
+                  ),
+                  TabTile(
+                    icon: Icons.build_circle,
+                    label: 'Utilities',
+                    tabIndex: 7,
+                  ),
+                ],
+              ),
+            ),
+            const VerticalDivider(width: 1, thickness: 1, color: Colors.grey),
+            // Right side TabBarView
+            Expanded(
+              child: TabBarView(
+                children: [
+                  globalData.isUserLoggedIn
+                      ? LoggedInWidget(globalData: globalData)
+                      : const HomePage(),
+                  globalData.isUserLoggedIn
+                      ? StudentLayout()
+                      : const LoggedOutWidget(),
+                  globalData.isUserLoggedIn
+                      ? StudentDetailsLayout()
+                      : const LoggedOutWidget(),
+                  globalData.isUserLoggedIn
+                      ? StaffLayout()
+                      : const LoggedOutWidget(),
+                  globalData.isUserLoggedIn
+                      ? StaffDetailsLayout()
+                      : const LoggedOutWidget(),
+                  globalData.isUserLoggedIn
+                      ? const AccountsLayout()
+                      : const LoggedOutWidget(),
+                  globalData.isUserLoggedIn
+                      ? const InventoryLayout()
+                      : const LoggedOutWidget(),
+                  globalData.isUserLoggedIn
+                      ? const UnderProgressWidget()
+                      : const LoggedOutWidget(),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class TabTile extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final int tabIndex;
+
+  const TabTile({
+    required this.icon,
+    required this.label,
+    required this.tabIndex,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: () {
+        DefaultTabController.of(context)?.animateTo(tabIndex);
+      },
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 16.0),
+        child: Row(
+          children: [
+            Icon(icon, size: 24),
+            const SizedBox(width: 8),
+            Text(label),
           ],
         ),
       ),
