@@ -16,12 +16,13 @@ class AccountsLayoutState extends State<AccountsLayout> {
     return DefaultTabController(
       length: 4,
       child: Scaffold(
+        backgroundColor: Colors.amber[60],
         appBar: AppBar(
           bottom: const PreferredSize(
-            preferredSize: Size.fromHeight(25), // Adjust height here
+            preferredSize: Size.fromHeight(20), // Adjust height here
             child: TabBar(
               indicatorColor: Colors.white,
-              labelColor: Colors.black,
+              labelColor: Colors.grey,
               unselectedLabelColor: Colors.white,
               labelPadding:
                   EdgeInsets.symmetric(horizontal: 8.0), // Reduce padding
@@ -47,14 +48,14 @@ class AccountsLayoutState extends State<AccountsLayout> {
               ],
             ),
           ),
-          backgroundColor: Colors.blue,
+          backgroundColor: Colors.grey[800],
         ),
-        body: TabBarView(
+        body: const TabBarView(
           children: [
             PaymentForm(),
             PaymentDetailsForm(),
-            const UnderProgressWidget(),
-            const UnderProgressWidget(),
+            UnderProgressWidget(),
+            UnderProgressWidget(),
           ],
         ),
       ),

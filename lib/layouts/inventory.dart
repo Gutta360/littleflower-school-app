@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:littleflower/tabs/inventory/item.dart';
 import 'package:littleflower/tabs/inventory/item_details.dart';
 import 'package:littleflower/tabs/inventory/item_management.dart';
-import 'package:littleflower/tabs/inventory/stock_status.dart';
 
 class InventoryLayout extends StatefulWidget {
   const InventoryLayout({super.key});
@@ -17,12 +16,13 @@ class InventoryLayoutState extends State<InventoryLayout> {
     return DefaultTabController(
       length: 3,
       child: Scaffold(
+        backgroundColor: Colors.amber[60],
         appBar: AppBar(
           bottom: const PreferredSize(
             preferredSize: Size.fromHeight(25), // Adjust height here
             child: TabBar(
               indicatorColor: Colors.white,
-              labelColor: Colors.black,
+              labelColor: Colors.grey,
               unselectedLabelColor: Colors.white,
               labelPadding:
                   EdgeInsets.symmetric(horizontal: 8.0), // Reduce padding
@@ -45,7 +45,7 @@ class InventoryLayoutState extends State<InventoryLayout> {
               ],
             ),
           ),
-          backgroundColor: Colors.blue,
+          backgroundColor: Colors.grey[800],
         ),
         body: TabBarView(
           children: [

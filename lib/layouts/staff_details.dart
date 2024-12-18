@@ -46,6 +46,7 @@ class _StaffDetailsLayoutState extends State<StaffDetailsLayout> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.amber[60],
       body: Form(
         key: _formKey,
         child: Column(
@@ -98,55 +99,64 @@ class _StaffDetailsLayoutState extends State<StaffDetailsLayout> {
 
   Widget _buildStepProgressIndicatorWithIcons() {
     List<IconData> stepIcons = [
-      Icons.account_circle, // Staff Details
-      Icons.home, // Address
+      Icons.account_circle,
+      Icons.home,
     ];
 
-    List<String> stepLabels = ["Staff Details", "Address"];
+    List<String> stepContents = ["Staff Details", "Address"];
 
-    return Column(
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: List.generate(
-            stepIcons.length,
-            (index) => Column(
+    return Row(
+      children: List.generate(
+        stepIcons.length,
+        (index) {
+          return Expanded(
+            child: Stack(
               children: [
-                CircleAvatar(
-                  backgroundColor:
-                      _currentStep == index ? Colors.blue : Colors.grey[300],
-                  child: Icon(
-                    stepIcons[index],
-                    color: _currentStep == index ? Colors.white : Colors.grey,
+                // Background arrow shape
+                ClipPath(
+                  clipper: ArrowClipper(isLast: index == stepIcons.length - 1),
+                  child: Container(
+                    height: 45,
+                    color: _currentStep == index
+                        ? Colors.grey[800] // Active Step
+                        : _currentStep > index
+                            ? Colors.grey[500] // Completed Steps
+                            : Colors.grey[300], // Inactive Step
                   ),
                 ),
-                const SizedBox(height: 8), // Space between icon and label
-                Text(
-                  stepLabels[index],
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: _currentStep == index ? Colors.blue : Colors.grey,
+                // Step Content (Icon)
+                Positioned.fill(
+                  child: Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          stepIcons[index],
+                          size: 25,
+                          color: _currentStep == index
+                              ? Colors.white
+                              : _currentStep > index
+                                  ? Colors.white
+                                  : Colors.grey[700],
+                        ),
+                        Text(
+                          stepContents[index],
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: _currentStep == index
+                                ? Colors.white
+                                : Colors.grey[500],
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ],
             ),
-          ),
-        ),
-        const SizedBox(
-            height: 8), // Space between the step indicators and the rest
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: List.generate(
-            stepIcons.length - 1,
-            (index) => Expanded(
-              child: Divider(
-                color: index < _currentStep ? Colors.blue : Colors.grey,
-                thickness: 2.0,
-              ),
-            ),
-          ),
-        ),
-      ],
+          );
+        },
+      ),
     );
   }
 
@@ -161,7 +171,7 @@ class _StaffDetailsLayoutState extends State<StaffDetailsLayout> {
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(
                 foregroundColor: Colors.white,
-                backgroundColor: Colors.blue,
+                backgroundColor: Colors.grey[800],
                 padding: const EdgeInsets.symmetric(vertical: 14),
                 minimumSize: const Size(120, 40),
                 textStyle: const TextStyle(
@@ -183,7 +193,7 @@ class _StaffDetailsLayoutState extends State<StaffDetailsLayout> {
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(
                 foregroundColor: Colors.white,
-                backgroundColor: Colors.blue,
+                backgroundColor: Colors.grey[800],
                 padding: const EdgeInsets.symmetric(vertical: 14),
                 minimumSize: const Size(120, 40),
                 textStyle: const TextStyle(
@@ -414,4 +424,28 @@ class _StaffDetailsLayoutState extends State<StaffDetailsLayout> {
       );
     }
   }
+}
+
+class ArrowClipper extends CustomClipper<Path> {
+  final bool isLast;
+
+  ArrowClipper({this.isLast = false});
+
+  @override
+  Path getClip(Size size) {
+    Path path = Path();
+
+    path.moveTo(0, 0);
+    path.lineTo(size.width - (isLast ? 0 : 20), 0);
+    path.lineTo(size.width, size.height / 2);
+    path.lineTo(size.width - (isLast ? 0 : 20), size.height);
+    path.lineTo(0, size.height);
+    path.lineTo(20, size.height / 2);
+    path.close();
+
+    return path;
+  }
+
+  @override
+  bool shouldReclip(CustomClipper oldClipper) => false;
 }

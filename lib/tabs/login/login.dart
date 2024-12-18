@@ -75,7 +75,7 @@ class LoginForm extends StatelessWidget {
               onPressed: onLoginPressed,
               style: ElevatedButton.styleFrom(
                 foregroundColor: Colors.white,
-                backgroundColor: Colors.blue,
+                backgroundColor: Colors.grey[800],
                 padding: const EdgeInsets.symmetric(vertical: 14),
                 minimumSize: const Size(120, 40),
                 textStyle: const TextStyle(fontSize: 15),
@@ -87,7 +87,7 @@ class LoginForm extends StatelessWidget {
               onPressed: onForgotPassword,
               child: const Text(
                 'Forgot Password?',
-                style: TextStyle(color: Colors.blue),
+                style: TextStyle(color: Colors.grey),
               ),
             ),
           ],

@@ -35,14 +35,14 @@ class _HomeLayoutState extends State<HomeLayout> {
             ),
           ),
           centerTitle: true,
-          backgroundColor: Colors.blue,
+          backgroundColor: Colors.orange[500],
         ),
         body: Row(
           children: [
             // Left side vertical tabs
             Container(
               width: 150, // Adjust width as needed
-              color: Colors.grey[200],
+              color: Colors.grey[800],
               child: ListView(
                 children: const [
                   TabTile(
@@ -88,35 +88,53 @@ class _HomeLayoutState extends State<HomeLayout> {
                 ],
               ),
             ),
-            const VerticalDivider(width: 1, thickness: 1, color: Colors.grey),
+            const VerticalDivider(width: 2, thickness: 2, color: Colors.grey),
             // Right side TabBarView
             Expanded(
-              child: TabBarView(
+              child: Stack(
                 children: [
-                  globalData.isUserLoggedIn
-                      ? LoggedInWidget(globalData: globalData)
-                      : const HomePage(),
-                  globalData.isUserLoggedIn
-                      ? StudentLayout()
-                      : const LoggedOutWidget(),
-                  globalData.isUserLoggedIn
-                      ? StudentDetailsLayout()
-                      : const LoggedOutWidget(),
-                  globalData.isUserLoggedIn
-                      ? StaffLayout()
-                      : const LoggedOutWidget(),
-                  globalData.isUserLoggedIn
-                      ? StaffDetailsLayout()
-                      : const LoggedOutWidget(),
-                  globalData.isUserLoggedIn
-                      ? const AccountsLayout()
-                      : const LoggedOutWidget(),
-                  globalData.isUserLoggedIn
-                      ? const InventoryLayout()
-                      : const LoggedOutWidget(),
-                  globalData.isUserLoggedIn
-                      ? const UnderProgressWidget()
-                      : const LoggedOutWidget(),
+                  // Background image with opacity
+                  Opacity(
+                    opacity: 0.2, // Set the opacity to 20%
+                    child: Container(
+                      decoration: const BoxDecoration(
+                        image: DecorationImage(
+                          image: AssetImage(
+                              "login_background.jpg"), // Path to your image
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    ),
+                  ),
+                  // TabBarView content
+                  TabBarView(
+                    children: [
+                      globalData.isUserLoggedIn
+                          ? LoggedInWidget(globalData: globalData)
+                          : const HomePage(),
+                      globalData.isUserLoggedIn
+                          ? StudentLayout()
+                          : const LoggedOutWidget(),
+                      globalData.isUserLoggedIn
+                          ? StudentDetailsLayout()
+                          : const LoggedOutWidget(),
+                      globalData.isUserLoggedIn
+                          ? StaffLayout()
+                          : const LoggedOutWidget(),
+                      globalData.isUserLoggedIn
+                          ? StaffDetailsLayout()
+                          : const LoggedOutWidget(),
+                      globalData.isUserLoggedIn
+                          ? const AccountsLayout()
+                          : const LoggedOutWidget(),
+                      globalData.isUserLoggedIn
+                          ? const InventoryLayout()
+                          : const LoggedOutWidget(),
+                      globalData.isUserLoggedIn
+                          ? const UnderProgressWidget()
+                          : const LoggedOutWidget(),
+                    ],
+                  ),
                 ],
               ),
             ),
@@ -148,9 +166,9 @@ class TabTile extends StatelessWidget {
         padding: const EdgeInsets.symmetric(vertical: 16.0),
         child: Row(
           children: [
-            Icon(icon, size: 24),
+            Icon(icon, size: 24, color: Colors.grey),
             const SizedBox(width: 8),
-            Text(label),
+            Text(label, style: const TextStyle(color: Colors.grey)),
           ],
         ),
       ),

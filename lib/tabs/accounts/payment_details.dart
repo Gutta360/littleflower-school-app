@@ -140,7 +140,6 @@ class _PaymentDetailsFormState extends State<PaymentDetailsForm> {
     return DropdownButtonFormField<String>(
       decoration: const InputDecoration(
         labelText: "Name",
-        hintText: "Capitals and Space only. Ex: NAME SURNAME",
         prefixIcon: Icon(Icons.account_circle),
       ),
       value: selectedStudentName,

@@ -60,7 +60,6 @@ class _PaymentFormState extends State<PaymentForm> {
             DropdownButtonFormField<String>(
               decoration: const InputDecoration(
                 labelText: "Name",
-                hintText: "Capitals and Space only. Ex: NAME SURNAME",
                 prefixIcon: Icon(Icons.account_circle),
               ),
               value: selectedStudentName,
@@ -91,7 +90,7 @@ class _PaymentFormState extends State<PaymentForm> {
                 onPressed: _submitForm,
                 style: ElevatedButton.styleFrom(
                   foregroundColor: Colors.white,
-                  backgroundColor: Colors.blue,
+                  backgroundColor: Colors.grey[800],
                   minimumSize: const Size(120, 40), // Ensures the button size
                   textStyle: const TextStyle(fontSize: 15),
                 ),

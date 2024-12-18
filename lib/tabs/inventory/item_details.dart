@@ -177,7 +177,7 @@ class _ItemDetailsState extends State<ItemDetails> {
               onPressed: () => _updateItem(context),
               style: ElevatedButton.styleFrom(
                 foregroundColor: Colors.white,
-                backgroundColor: Colors.blue,
+                backgroundColor: Colors.grey[800],
                 minimumSize: const Size(120, 40),
                 textStyle: const TextStyle(fontSize: 15),
               ),

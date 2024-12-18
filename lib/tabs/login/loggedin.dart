@@ -29,7 +29,7 @@ class LoggedInWidget extends StatelessWidget {
           },
           style: ElevatedButton.styleFrom(
             foregroundColor: Colors.white,
-            backgroundColor: Colors.blue,
+            backgroundColor: Colors.grey[800],
             padding: const EdgeInsets.symmetric(vertical: 14),
             minimumSize: const Size(120, 40),
             textStyle: const TextStyle(fontSize: 15),

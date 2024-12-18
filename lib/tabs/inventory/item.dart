@@ -157,7 +157,7 @@ class Item extends StatelessWidget {
             onPressed: () => _addItem(context),
             style: ElevatedButton.styleFrom(
               foregroundColor: Colors.white,
-              backgroundColor: Colors.blue,
+              backgroundColor: Colors.grey[800],
               minimumSize: const Size(120, 40), // Ensures the button size
               textStyle: const TextStyle(fontSize: 15),
             ),
