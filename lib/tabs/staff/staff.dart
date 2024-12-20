@@ -193,14 +193,14 @@ class _StaffFormState extends State<StaffForm> {
           context: context,
           label: "Expected Salary",
           hint: "Enter decimal values only",
-          icon: Icons.money_off,
+          icon: Icons.currency_rupee_outlined,
         ),
         _buildDecimalField(
           controller: widget.currentSalaryController,
           context: context,
           label: "Current Salary",
           hint: "Enter decimal values only",
-          icon: Icons.money,
+          icon: Icons.currency_rupee_outlined,
         ),
         _buildDecimalField(
           controller: widget.agreementPeriodController,

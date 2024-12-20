@@ -11,6 +11,7 @@ class StudentForm extends StatefulWidget {
   final ValueNotifier<String?> nationalityController;
   final ValueNotifier<String?> casteController;
   final TextEditingController previousSchoolController;
+  final TextEditingController totalFeeController;
 
   const StudentForm({
     Key? key,
@@ -23,6 +24,7 @@ class StudentForm extends StatefulWidget {
     required this.nationalityController,
     required this.casteController,
     required this.previousSchoolController,
+    required this.totalFeeController,
   }) : super(key: key);
 
   @override
@@ -240,7 +242,51 @@ class _StudentFormState extends State<StudentForm> {
               ? "Previous School is required"
               : null,
         ),
+
+        _buildDecimalField(
+          controller: widget.totalFeeController,
+          context: context,
+          label: "Total Fee",
+          hint: "Enter decimal values only",
+          icon: Icons.currency_rupee_outlined,
+        ),
       ],
+    );
+  }
+
+  Widget _buildDecimalField({
+    required TextEditingController controller,
+    required BuildContext context,
+    required String label,
+    required String hint,
+    required IconData icon,
+  }) {
+    return TextFormField(
+      controller: controller,
+      decoration: InputDecoration(
+        labelText: label,
+        hintText: hint,
+        prefixIcon: Icon(icon),
+      ),
+      keyboardType: TextInputType.numberWithOptions(decimal: true),
+      onChanged: (value) {
+        final decimalValue = value.replaceAll(RegExp(r'[^0-9.]'), '');
+        if (value != decimalValue) {
+          controller.value = TextEditingValue(
+            text: decimalValue,
+            selection: TextSelection.collapsed(offset: decimalValue.length),
+          );
+        }
+      },
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return "$label is required";
+        }
+        if (!RegExp(r'^\d+(\.\d+)?$').hasMatch(value)) {
+          return "Only decimal values are allowed";
+        }
+        return null;
+      },
     );
   }
 

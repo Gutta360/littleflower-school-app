@@ -29,6 +29,7 @@ class _StudentLayoutState extends State<StudentLayout> {
   final ValueNotifier<String?> _casteController = ValueNotifier<String?>(null);
   final TextEditingController _previousSchoolController =
       TextEditingController();
+  final TextEditingController _totalFeeController = TextEditingController();
   final TextEditingController _fatherNameController = TextEditingController();
   final TextEditingController _fatherPhoneController = TextEditingController();
   final TextEditingController _fatherEmailController = TextEditingController();
@@ -93,6 +94,7 @@ class _StudentLayoutState extends State<StudentLayout> {
                     nationalityController: _nationalityController,
                     casteController: _casteController,
                     previousSchoolController: _previousSchoolController,
+                    totalFeeController: _totalFeeController,
                   ),
                   ParentGuardianForm(
                     fatherNameController: _fatherNameController,
@@ -328,6 +330,7 @@ class _StudentLayoutState extends State<StudentLayout> {
         "student_religion": _religionController.value,
         "student_nationality": _nationalityController.value,
         "student_previous_school": _previousSchoolController.text,
+        "student_total_fee": _totalFeeController.text,
         "father_name": _fatherNameController.text,
         "father_phone": _fatherPhoneController.text,
         "father_email": _fatherEmailController.text,

@@ -12,6 +12,7 @@ class StudentForm extends StatefulWidget {
   final ValueNotifier<String?> nationalityController;
   final ValueNotifier<String?> casteController;
   final TextEditingController previousSchoolController;
+  final TextEditingController totalFeeController;
 
   final TextEditingController fatherNameController;
   final TextEditingController fatherPhoneController;
@@ -53,6 +54,7 @@ class StudentForm extends StatefulWidget {
     required this.nationalityController,
     required this.casteController,
     required this.previousSchoolController,
+    required this.totalFeeController,
     required this.fatherNameController,
     required this.fatherPhoneController,
     required this.fatherEmailController,
@@ -139,6 +141,7 @@ class _StudentFormState extends State<StudentForm> {
           widget.casteController.value = data['student_caste'];
           widget.previousSchoolController.text =
               data['student_previous_school'] ?? '';
+          widget.totalFeeController.text = data['student_total_fee'] ?? '';
           widget.fatherNameController.text = data['father_name'] ?? '';
           widget.fatherPhoneController.text = data['father_phone'] ?? '';
           widget.fatherEmailController.text = data['father_email'] ?? '';
@@ -389,7 +392,51 @@ class _StudentFormState extends State<StudentForm> {
               ? "Previous School is required"
               : null,
         ),
+
+        _buildDecimalField(
+          controller: widget.totalFeeController,
+          context: context,
+          label: "Total Fee",
+          hint: "Enter decimal values only",
+          icon: Icons.currency_rupee_outlined,
+        ),
       ],
+    );
+  }
+
+  Widget _buildDecimalField({
+    required TextEditingController controller,
+    required BuildContext context,
+    required String label,
+    required String hint,
+    required IconData icon,
+  }) {
+    return TextFormField(
+      controller: controller,
+      decoration: InputDecoration(
+        labelText: label,
+        hintText: hint,
+        prefixIcon: Icon(icon),
+      ),
+      keyboardType: TextInputType.numberWithOptions(decimal: true),
+      onChanged: (value) {
+        final decimalValue = value.replaceAll(RegExp(r'[^0-9.]'), '');
+        if (value != decimalValue) {
+          controller.value = TextEditingValue(
+            text: decimalValue,
+            selection: TextSelection.collapsed(offset: decimalValue.length),
+          );
+        }
+      },
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return "$label is required";
+        }
+        if (!RegExp(r'^\d+(\.\d+)?$').hasMatch(value)) {
+          return "Only decimal values are allowed";
+        }
+        return null;
+      },
     );
   }
 

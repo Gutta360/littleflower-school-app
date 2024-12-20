@@ -19,6 +19,11 @@ class _PaymentFormState extends State<PaymentForm> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController nameController = TextEditingController();
   final TextEditingController paymentAmountController = TextEditingController();
+  final TextEditingController gradeController = TextEditingController();
+  final TextEditingController fatherNameController = TextEditingController();
+  final TextEditingController phoneNumberController = TextEditingController();
+  final TextEditingController totalFeeController = TextEditingController();
+
   final DateFormat dateFormat = DateFormat("dd-MM-yyyy HH:mm:ss");
   List<String> studentNames = [];
   String? selectedStudentName;
@@ -49,56 +54,129 @@ class _PaymentFormState extends State<PaymentForm> {
     }
   }
 
+  /// Fetch additional student details based on selected name
+  Future<void> _fetchStudentDetails(String studentName) async {
+    try {
+      QuerySnapshot snapshot = await FirebaseFirestore.instance
+          .collection('students')
+          .where('student_name', isEqualTo: studentName)
+          .get();
+
+      if (snapshot.docs.isNotEmpty) {
+        var data = snapshot.docs.first.data() as Map<String, dynamic>;
+        setState(() {
+          gradeController.text = data['student_grade'] ?? '';
+          fatherNameController.text = data['father_name'] ?? '';
+          phoneNumberController.text = data['father_phone'] ?? '';
+          totalFeeController.text = data['student_total_fee']?.toString() ?? '';
+        });
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error fetching student details: $e'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Form(
-        key: _formKey,
-        child: ListView(
-          padding:
-              const EdgeInsets.symmetric(horizontal: 400.0, vertical: 25.0),
-          children: [
-            DropdownButtonFormField<String>(
-              decoration: const InputDecoration(
-                labelText: "Name",
-                prefixIcon: Icon(Icons.account_circle),
+      key: _formKey,
+      child: ListView(
+        padding: const EdgeInsets.symmetric(horizontal: 400.0, vertical: 25.0),
+        children: [
+          DropdownButtonFormField<String>(
+            decoration: const InputDecoration(
+              labelText: "Name",
+              prefixIcon: Icon(Icons.account_circle),
+            ),
+            value: selectedStudentName,
+            items: studentNames
+                .map((name) => DropdownMenuItem(value: name, child: Text(name)))
+                .toList(),
+            onChanged: (value) {
+              setState(() {
+                selectedStudentName = value;
+                nameController.text = value ?? '';
+              });
+              if (value != null) {
+                _fetchStudentDetails(value);
+              }
+            },
+            validator: (value) =>
+                value == null || value.isEmpty ? "Name is required" : null,
+          ),
+          const SizedBox(height: 16),
+          _buildTextField(
+            controller: gradeController,
+            label: "Grade",
+            icon: Icons.grade,
+            isReadOnly: true,
+          ),
+          const SizedBox(height: 16),
+          _buildTextField(
+            controller: fatherNameController,
+            label: "Father Name",
+            icon: Icons.person,
+            isReadOnly: true,
+          ),
+          const SizedBox(height: 16),
+          _buildTextField(
+            controller: phoneNumberController,
+            label: "Phone Number",
+            icon: Icons.phone,
+            isReadOnly: true,
+          ),
+          const SizedBox(height: 16),
+          _buildTextField(
+            controller: totalFeeController,
+            label: "Total Fee",
+            icon: Icons.attach_money,
+            isReadOnly: true,
+          ),
+          const SizedBox(height: 16),
+          _buildDecimalField(
+            controller: paymentAmountController,
+            context: context,
+            label: "Amount",
+            hint: "Enter decimal values only",
+            icon: Icons.currency_rupee_outlined,
+          ),
+          const SizedBox(height: 38),
+          Center(
+            child: ElevatedButton(
+              onPressed: _submitForm,
+              style: ElevatedButton.styleFrom(
+                foregroundColor: Colors.white,
+                backgroundColor: Colors.grey[800],
+                minimumSize: const Size(120, 40), // Ensures the button size
+                textStyle: const TextStyle(fontSize: 15),
               ),
-              value: selectedStudentName,
-              items: studentNames
-                  .map((name) =>
-                      DropdownMenuItem(value: name, child: Text(name)))
-                  .toList(),
-              onChanged: (value) {
-                setState(() {
-                  selectedStudentName = value;
-                  nameController.text = value ?? '';
-                });
-              },
-              validator: (value) =>
-                  value == null || value.isEmpty ? "Name is required" : null,
+              child: const Text('Submit'),
             ),
-            const SizedBox(height: 16),
-            _buildDecimalField(
-              controller: paymentAmountController,
-              context: context,
-              label: "Amount",
-              hint: "Enter decimal values only",
-              icon: Icons.currency_rupee_outlined,
-            ),
-            const SizedBox(height: 38),
-            Center(
-              child: ElevatedButton(
-                onPressed: _submitForm,
-                style: ElevatedButton.styleFrom(
-                  foregroundColor: Colors.white,
-                  backgroundColor: Colors.grey[800],
-                  minimumSize: const Size(120, 40), // Ensures the button size
-                  textStyle: const TextStyle(fontSize: 15),
-                ),
-                child: const Text('Submit'),
-              ),
-            ),
-          ],
-        ));
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildTextField({
+    required TextEditingController controller,
+    required String label,
+    required IconData icon,
+    bool isReadOnly = false,
+  }) {
+    return TextFormField(
+      controller: controller,
+      readOnly: isReadOnly,
+      decoration: InputDecoration(
+        labelText: label,
+        prefixIcon: Icon(icon),
+      ),
+    );
   }
 
   Widget _buildDecimalField({
@@ -141,6 +219,8 @@ class _PaymentFormState extends State<PaymentForm> {
     required String date,
     required String name,
     required String grade,
+    required String fathername,
+    required String phonenumber,
     required String amount,
     required String billId,
   }) {
@@ -168,6 +248,12 @@ class _PaymentFormState extends State<PaymentForm> {
                   Text('Grade:       $grade',
                       style: const TextStyle(fontSize: 16)),
                   const SizedBox(height: 8),
+                  Text('Father Name:       $fathername',
+                      style: const TextStyle(fontSize: 16)),
+                  const SizedBox(height: 8),
+                  Text('Phone Number:       $phonenumber',
+                      style: const TextStyle(fontSize: 16)),
+                  const SizedBox(height: 8),
                   Text('Paid Amount: $amount',
                       style: const TextStyle(fontSize: 16)),
                   const SizedBox(height: 8),
@@ -187,7 +273,8 @@ class _PaymentFormState extends State<PaymentForm> {
             ElevatedButton(
               onPressed: () async {
                 if (kIsWeb) {
-                  await _generatePdfWeb(date, name, grade, amount, billId);
+                  await _generatePdfWeb(date, name, grade, fathername,
+                      phonenumber, amount, billId);
                 }
                 Navigator.of(context).pop(); // Dismiss the dialog
               },
@@ -221,9 +308,6 @@ class _PaymentFormState extends State<PaymentForm> {
       Timestamp currentTimestamp = Timestamp.now();
       String formattedDate = dateFormat.format(currentTimestamp.toDate());
 
-      // Simulate a grade for demonstration (replace with actual grade if available)
-      String grade = "1";
-
       // Save the form data to the "payments" collection
       await FirebaseFirestore.instance
           .collection("payments")
@@ -231,7 +315,10 @@ class _PaymentFormState extends State<PaymentForm> {
           .set({
         "id": paymentId,
         "student_name": nameController.text,
-        "amount": paymentAmountController.text,
+        "father_name": fatherNameController.text,
+        "grade": gradeController.text,
+        "phone_number": phoneNumberController.text,
+        "payment_amount": paymentAmountController.text,
         "payment_date": currentTimestamp, // Save the timestamp
       });
 
@@ -245,7 +332,9 @@ class _PaymentFormState extends State<PaymentForm> {
       _showDetailsDialog(
         date: formattedDate,
         name: nameController.text,
-        grade: grade,
+        grade: gradeController.text,
+        fathername: fatherNameController.text,
+        phonenumber: phoneNumberController.text,
         amount: paymentAmountController.text,
         billId: paymentId,
       );
@@ -260,8 +349,14 @@ class _PaymentFormState extends State<PaymentForm> {
     }
   }
 
-  Future<void> _generatePdfWeb(String date, String name, String grade,
-      String amount, String billId) async {
+  Future<void> _generatePdfWeb(
+      String date,
+      String name,
+      String grade,
+      String fathername,
+      String phonenumber,
+      String amount,
+      String billId) async {
     final pdf = pw.Document();
 
     pdf.addPage(
@@ -270,17 +365,33 @@ class _PaymentFormState extends State<PaymentForm> {
           return pw.Column(
             crossAxisAlignment: pw.CrossAxisAlignment.start,
             children: [
-              pw.Text('Date:        $date', style: pw.TextStyle(fontSize: 16)),
+              pw.Text('Bill ID: $billId',
+                  style: pw.TextStyle(
+                      fontSize: 16, fontWeight: pw.FontWeight.bold)),
               pw.SizedBox(height: 8),
-              pw.Text('Name:        $name', style: pw.TextStyle(fontSize: 16)),
+              pw.Text('Date: $date',
+                  style: pw.TextStyle(
+                      fontSize: 16, fontWeight: pw.FontWeight.bold)),
               pw.SizedBox(height: 8),
-              pw.Text('Grade:       $grade', style: pw.TextStyle(fontSize: 16)),
+              pw.Text('Name: $name',
+                  style: pw.TextStyle(
+                      fontSize: 16, fontWeight: pw.FontWeight.bold)),
+              pw.SizedBox(height: 8),
+              pw.Text('Grade: $grade',
+                  style: pw.TextStyle(
+                      fontSize: 16, fontWeight: pw.FontWeight.bold)),
+              pw.SizedBox(height: 8),
+              pw.Text('Father Name: $fathername',
+                  style: pw.TextStyle(
+                      fontSize: 16, fontWeight: pw.FontWeight.bold)),
+              pw.SizedBox(height: 8),
+              pw.Text('Phone Number: $phonenumber',
+                  style: pw.TextStyle(
+                      fontSize: 16, fontWeight: pw.FontWeight.bold)),
               pw.SizedBox(height: 8),
               pw.Text('Paid Amount: $amount',
-                  style: pw.TextStyle(fontSize: 16)),
-              pw.SizedBox(height: 8),
-              pw.Text('Bill ID:     $billId',
-                  style: pw.TextStyle(fontSize: 16)),
+                  style: pw.TextStyle(
+                      fontSize: 16, fontWeight: pw.FontWeight.bold)),
             ],
           );
         },
