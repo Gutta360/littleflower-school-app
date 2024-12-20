@@ -192,49 +192,57 @@ class _StudentDetailsLayoutState extends State<StudentDetailsLayout> {
         stepIcons.length,
         (index) {
           return Expanded(
-            child: Stack(
-              children: [
-                // Background arrow shape
-                ClipPath(
-                  clipper: ArrowClipper(isLast: index == stepIcons.length - 1),
-                  child: Container(
-                    height: 45,
-                    color: _currentStep == index
-                        ? Colors.grey[800] // Active Step
-                        : _currentStep > index
-                            ? Colors.grey[500] // Completed Steps
-                            : Colors.grey[300], // Inactive Step
-                  ),
-                ),
-                // Step Content (Icon)
-                Positioned.fill(
-                  child: Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          stepIcons[index],
-                          size: 25,
-                          color: _currentStep == index
-                              ? Colors.white
-                              : _currentStep > index
-                                  ? Colors.white
-                                  : Colors.grey[700],
-                        ),
-                        Text(
-                          stepContents[index],
-                          style: TextStyle(
-                            fontSize: 12,
-                            color: _currentStep == index
-                                ? Colors.white
-                                : Colors.grey[500],
-                          ),
-                        ),
-                      ],
+            child: GestureDetector(
+              onTap: () {
+                setState(() {
+                  _currentStep = index;
+                });
+              },
+              child: Stack(
+                children: [
+                  // Background arrow shape
+                  ClipPath(
+                    clipper:
+                        ArrowClipper(isLast: index == stepIcons.length - 1),
+                    child: Container(
+                      height: 45,
+                      color: _currentStep == index
+                          ? Colors.grey[800] // Active Step
+                          : _currentStep > index
+                              ? Colors.grey[500] // Completed Steps
+                              : Colors.grey[300], // Inactive Step
                     ),
                   ),
-                ),
-              ],
+                  // Step Content (Icon)
+                  Positioned.fill(
+                    child: Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            stepIcons[index],
+                            size: 25,
+                            color: _currentStep == index
+                                ? Colors.white
+                                : _currentStep > index
+                                    ? Colors.white
+                                    : Colors.grey[700],
+                          ),
+                          Text(
+                            stepContents[index],
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: _currentStep == index
+                                  ? Colors.white
+                                  : Colors.grey[500],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           );
         },
