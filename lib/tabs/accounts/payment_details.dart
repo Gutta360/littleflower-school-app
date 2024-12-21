@@ -235,7 +235,7 @@ class _PaymentDetailsFormState extends State<PaymentDetailsForm> {
               return DataRow(
                 cells: [
                   DataCell(Text(record['id'] ?? '')),
-                  DataCell(Text(record['amount'] ?? '')),
+                  DataCell(Text(record['payment_amount'] ?? '')),
                   DataCell(Text(record['payment_date'] != null
                       ? dateFormat.format(
                           (record['payment_date'] as Timestamp).toDate())
