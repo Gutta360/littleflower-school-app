@@ -27,12 +27,11 @@ class StatsLayoutState extends State<StatsLayout> {
                   EdgeInsets.symmetric(horizontal: 8.0), // Reduce padding
               tabs: [
                 Tab(
-                  icon: Icon(Icons.currency_rupee_rounded,
-                      size: 20), // Adjust icon size
+                  icon: Icon(Icons.school, size: 20), // Adjust icon size
                   text: 'Grade',
                 ),
                 Tab(
-                  icon: Icon(Icons.list_alt, size: 20), // Adjust icon size
+                  icon: Icon(Icons.apartment, size: 20), // Adjust icon size
                   text: 'School',
                 ),
               ],

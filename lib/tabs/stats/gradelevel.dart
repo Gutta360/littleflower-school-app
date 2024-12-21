@@ -19,78 +19,110 @@ class _GradeLevelState extends State<GradeLevel> {
       child: Column(
         children: [
           // Dropdown for Grades
-          DropdownButtonFormField<String>(
-            decoration: const InputDecoration(
-              labelText: "Grade",
-              border: OutlineInputBorder(),
+          Center(
+            child: SizedBox(
+              width: 400,
+              child: DropdownButtonFormField<String>(
+                decoration: const InputDecoration(
+                  labelText: "Grade",
+                ),
+                value: selectedGrade,
+                items: grades
+                    .map((grade) => DropdownMenuItem(
+                          value: grade,
+                          child: Text(grade),
+                        ))
+                    .toList(),
+                onChanged: (value) {
+                  setState(() {
+                    selectedGrade = value;
+                  });
+                  if (value != null) {
+                    _fetchStudentsByGrade(value);
+                  }
+                },
+              ),
             ),
-            value: selectedGrade,
-            items: grades
-                .map((grade) =>
-                    DropdownMenuItem(value: grade, child: Text(grade)))
-                .toList(),
-            onChanged: (value) {
-              setState(() {
-                selectedGrade = value;
-              });
-              if (value != null) {
-                _fetchStudentsByGrade(value);
-              }
-            },
           ),
-          const SizedBox(height: 16),
-          // Table for Students
-          Expanded(
-            child: students.isEmpty
-                ? const Center(
-                    child: Text(
-                      "No students found for the selected grade.",
-                      style: TextStyle(fontSize: 16),
-                    ),
-                  )
-                : ListView.builder(
-                    itemCount: students.length,
-                    itemBuilder: (context, index) {
-                      final student = students[index];
-                      final double totalFee = double.tryParse(
-                              student["student_total_fee"] ?? "0") ??
-                          0.0;
-                      final double paidFee = student["paid"] ?? 0.0;
-                      final double percent =
-                          totalFee > 0 ? (paidFee / totalFee) : 0.0;
 
-                      return Card(
-                        margin: const EdgeInsets.symmetric(
-                            vertical: 8.0, horizontal: 16.0),
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Row(
-                            children: [
-                              // Name Column
-                              Expanded(
-                                flex: 3,
-                                child: Text(
-                                  student["student_name"],
-                                  style: const TextStyle(fontSize: 16),
-                                ),
-                              ),
-                              // Paid Fee Column
-                              Expanded(
-                                flex: 2,
-                                child: Text(
-                                  "Paid: ${paidFee.toStringAsFixed(2)}",
-                                  style: const TextStyle(fontSize: 16),
-                                  textAlign: TextAlign.right,
-                                ),
-                              ),
-                              // Percent Bar Column
-                              Expanded(
-                                flex: 4,
+          const SizedBox(height: 16),
+
+          // Table for Students
+          students.isEmpty
+              ? const Center(
+                  child: Text(
+                    "No students found for the selected grade.",
+                    style: TextStyle(fontSize: 16),
+                  ),
+                )
+              : Expanded(
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: SizedBox(
+                      width: MediaQuery.of(context).size.width * 0.85,
+                      child: DataTable(
+                        columnSpacing: 16.0,
+                        horizontalMargin: 16.0,
+                        columns: const [
+                          DataColumn(
+                            label: Text(
+                              'Name',
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                              textAlign: TextAlign.left,
+                            ),
+                          ),
+                          DataColumn(
+                            label: Text(
+                              'Paid Fee',
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                              textAlign: TextAlign.left,
+                            ),
+                          ),
+                          DataColumn(
+                            label: Text(
+                              '  Percent',
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                              textAlign: TextAlign.left,
+                            ),
+                          ),
+                          DataColumn(
+                            label: Text(
+                              'Total Fee',
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                              textAlign: TextAlign.left,
+                            ),
+                          ),
+                          DataColumn(
+                            label: Text(
+                              'Balance',
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                              textAlign: TextAlign.left,
+                            ),
+                          ),
+                        ],
+                        rows: students.map((student) {
+                          final double totalFee = double.tryParse(
+                                  student["student_total_fee"]?.toString() ??
+                                      "0.0") ??
+                              0.0;
+                          final double paidFee = student["paid"] ?? 0.0;
+                          final double balance = totalFee - paidFee;
+                          final double percent = totalFee > 0
+                              ? (paidFee / totalFee).clamp(0.0, 1.0)
+                              : 0.0;
+
+                          return DataRow(cells: [
+                            DataCell(
+                                Text(student["student_name"] ?? "Unknown")),
+                            DataCell(Text(paidFee.toStringAsFixed(2))),
+                            DataCell(
+                              SizedBox(
+                                width: MediaQuery.of(context).size.width * 0.15,
                                 child: LinearPercentIndicator(
                                   animation: true,
                                   animationDuration: 1000,
                                   lineHeight: 20.0,
-                                  percent: percent.clamp(0.0, 1.0),
+                                  percent: percent,
                                   center: Text(
                                     "${(percent * 100).toStringAsFixed(1)}%",
                                     style: const TextStyle(
@@ -101,22 +133,15 @@ class _GradeLevelState extends State<GradeLevel> {
                                   backgroundColor: Colors.grey[300],
                                 ),
                               ),
-                              // Total Fee Column
-                              Expanded(
-                                flex: 2,
-                                child: Text(
-                                  "Total: ${totalFee.toStringAsFixed(2)}",
-                                  style: const TextStyle(fontSize: 16),
-                                  textAlign: TextAlign.right,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      );
-                    },
+                            ),
+                            DataCell(Text(totalFee.toStringAsFixed(2))),
+                            DataCell(Text(balance.toStringAsFixed(2))),
+                          ]);
+                        }).toList(),
+                      ),
+                    ),
                   ),
-          ),
+                ),
         ],
       ),
     );
