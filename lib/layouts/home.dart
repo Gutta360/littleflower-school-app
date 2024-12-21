@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:littleflower/layouts/accounts.dart';
 import 'package:littleflower/layouts/inventory.dart';
+import 'package:littleflower/layouts/stats.dart';
 import 'package:littleflower/layouts/student.dart';
 import 'package:littleflower/tabs/login/home_page.dart';
 import 'package:littleflower/tabs/login/loggedIn.dart';
@@ -81,8 +82,8 @@ class _HomeLayoutState extends State<HomeLayout> {
                     tabIndex: 6,
                   ),
                   TabTile(
-                    icon: Icons.build_circle,
-                    label: 'Utilities',
+                    icon: Icons.bar_chart,
+                    label: 'Stats',
                     tabIndex: 7,
                   ),
                 ],
@@ -131,7 +132,7 @@ class _HomeLayoutState extends State<HomeLayout> {
                           ? const InventoryLayout()
                           : const LoggedOutWidget(),
                       globalData.isUserLoggedIn
-                          ? const UnderProgressWidget()
+                          ? const StatsLayout()
                           : const LoggedOutWidget(),
                     ],
                   ),
