@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:percent_indicator/percent_indicator.dart';
+import 'package:dropdown_search/dropdown_search.dart';
 
 class GradeLevel extends StatefulWidget {
   @override
@@ -20,33 +21,36 @@ class _GradeLevelState extends State<GradeLevel> {
         children: [
           // Dropdown for Grades
           Center(
-            child: SizedBox(
-              width: 400,
-              child: DropdownButtonFormField<String>(
-                decoration: const InputDecoration(
-                  labelText: "Grade",
-                ),
-                value: selectedGrade,
-                items: grades
-                    .map((grade) => DropdownMenuItem(
-                          value: grade,
-                          child: Text(grade),
-                        ))
-                    .toList(),
-                onChanged: (value) {
-                  setState(() {
-                    selectedGrade = value;
-                  });
-                  if (value != null) {
-                    _fetchStudentsByGrade(value);
-                  }
-                },
-              ),
-            ),
-          ),
-
+              child: SizedBox(
+                  width: 400,
+                  child: DropdownSearch<String>(
+                    popupProps: const PopupProps.menu(
+                      showSearchBox: true, // Enables the type search feature
+                      searchFieldProps: TextFieldProps(
+                        decoration: InputDecoration(
+                          labelText: "Search Grade", // Label for the search box
+                          border: OutlineInputBorder(),
+                        ),
+                      ),
+                    ),
+                    items: grades,
+                    dropdownDecoratorProps: const DropDownDecoratorProps(
+                      dropdownSearchDecoration: InputDecoration(
+                        labelText: "Grade",
+                        //border: OutlineInputBorder(),
+                      ),
+                    ),
+                    selectedItem: selectedGrade,
+                    onChanged: (value) {
+                      setState(() {
+                        selectedGrade = value;
+                      });
+                      if (value != null) {
+                        _fetchStudentsByGrade(value);
+                      }
+                    },
+                  ))),
           const SizedBox(height: 16),
-
           // Table for Students
           students.isEmpty
               ? const Center(

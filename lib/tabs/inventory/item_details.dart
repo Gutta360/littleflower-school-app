@@ -1,3 +1,4 @@
+import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -118,18 +119,25 @@ class _ItemDetailsState extends State<ItemDetails> {
     return ListView(
       padding: const EdgeInsets.symmetric(horizontal: 400.0, vertical: 16.0),
       children: [
-        DropdownButtonFormField<String>(
-          value: selectedItemName,
-          decoration: InputDecoration(
-            labelText: "Item Name",
-            prefixIcon: Icon(Icons.inventory),
+        DropdownSearch<String>(
+          popupProps: const PopupProps.menu(
+            showSearchBox: true,
+            searchFieldProps: TextFieldProps(
+              decoration: InputDecoration(
+                labelText: "Search Item Name",
+                border: OutlineInputBorder(),
+                prefixIcon: Icon(Icons.search),
+              ),
+            ),
           ),
-          items: itemNames.map((name) {
-            return DropdownMenuItem(
-              value: name,
-              child: Text(name),
-            );
-          }).toList(),
+          items: itemNames,
+          selectedItem: selectedItemName,
+          dropdownDecoratorProps: const DropDownDecoratorProps(
+            dropdownSearchDecoration: InputDecoration(
+              labelText: "Item Name",
+              prefixIcon: Icon(Icons.inventory),
+            ),
+          ),
           onChanged: (value) {
             setState(() {
               selectedItemName = value;

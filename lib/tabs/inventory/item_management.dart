@@ -1,3 +1,4 @@
+import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:percent_indicator/percent_indicator.dart';
@@ -84,22 +85,29 @@ class _ItemManagementState extends State<ItemManagement> {
             child: Row(
               children: [
                 Expanded(
-                  child: DropdownButtonFormField<String>(
-                    value: selectedItemName,
-                    decoration: const InputDecoration(
-                      labelText: "Item Name",
-                      prefixIcon: Icon(Icons.inventory),
+                  child: DropdownSearch<String>(
+                    popupProps: const PopupProps.menu(
+                      showSearchBox: true,
+                      searchFieldProps: TextFieldProps(
+                        decoration: InputDecoration(
+                          labelText: "Search Item Name",
+                          border: OutlineInputBorder(),
+                          prefixIcon: Icon(Icons.search),
+                        ),
+                      ),
                     ),
-                    items: itemNames.map((name) {
-                      return DropdownMenuItem(
-                        value: name,
-                        child: Text(name),
-                      );
-                    }).toList(),
+                    items: itemNames,
+                    selectedItem: selectedItemName,
+                    dropdownDecoratorProps: const DropDownDecoratorProps(
+                      dropdownSearchDecoration: InputDecoration(
+                        labelText: "Item Name",
+                        prefixIcon: Icon(Icons.inventory),
+                      ),
+                    ),
                     onChanged: (value) {
                       setState(() {
                         selectedItemName = value;
-                        _applyFilters();
+                        _applyFilters(); // Applies filters when a value is selected
                       });
                     },
                   ),

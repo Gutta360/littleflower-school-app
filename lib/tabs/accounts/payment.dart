@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 import 'dart:html' as html; // Import for web-specific functionality
+import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
@@ -116,16 +117,25 @@ class _PaymentFormState extends State<PaymentForm> {
                   childAspectRatio: 10,
                 ),
                 children: [
-                  DropdownButtonFormField<String>(
-                    decoration: const InputDecoration(
-                      labelText: "Name",
-                      prefixIcon: Icon(Icons.account_circle),
+                  DropdownSearch<String>(
+                    popupProps: const PopupProps.menu(
+                      showSearchBox: true,
+                      searchFieldProps: TextFieldProps(
+                        decoration: InputDecoration(
+                          labelText: "Search Name",
+                          border: OutlineInputBorder(),
+                          prefixIcon: Icon(Icons.search),
+                        ),
+                      ),
                     ),
-                    value: selectedStudentName,
-                    items: studentNames
-                        .map((name) =>
-                            DropdownMenuItem(value: name, child: Text(name)))
-                        .toList(),
+                    items: studentNames,
+                    selectedItem: selectedStudentName,
+                    dropdownDecoratorProps: const DropDownDecoratorProps(
+                      dropdownSearchDecoration: InputDecoration(
+                        labelText: "Name",
+                        prefixIcon: Icon(Icons.account_circle),
+                      ),
+                    ),
                     onChanged: (value) {
                       setState(() {
                         selectedStudentName = value;

@@ -1,3 +1,4 @@
+import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -89,16 +90,25 @@ class _StaffFormState extends State<StaffForm> {
         childAspectRatio: 6,
       ),
       children: [
-        DropdownButtonFormField<String>(
-          decoration: const InputDecoration(
-            labelText: "Name",
-            hintText: "Capitals and Space only. Ex: NAME SURNAME",
-            prefixIcon: Icon(Icons.account_circle),
+        DropdownSearch<String>(
+          popupProps: const PopupProps.menu(
+            showSearchBox: true,
+            searchFieldProps: TextFieldProps(
+              decoration: InputDecoration(
+                labelText: "Search Name",
+                border: OutlineInputBorder(),
+                prefixIcon: Icon(Icons.search),
+              ),
+            ),
           ),
-          value: selectedStaffName,
-          items: staffNames
-              .map((name) => DropdownMenuItem(value: name, child: Text(name)))
-              .toList(),
+          items: staffNames,
+          selectedItem: selectedStaffName,
+          dropdownDecoratorProps: const DropDownDecoratorProps(
+            dropdownSearchDecoration: InputDecoration(
+              labelText: "Name",
+              prefixIcon: Icon(Icons.account_circle),
+            ),
+          ),
           onChanged: (value) {
             setState(() {
               selectedStaffName = value;

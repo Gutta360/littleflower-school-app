@@ -1,3 +1,4 @@
+import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
@@ -201,16 +202,25 @@ class _StudentFormState extends State<StudentForm> {
       ),
       children: [
         // Updated Name Field as Dropdown
-        DropdownButtonFormField<String>(
-          decoration: const InputDecoration(
-            labelText: "Name",
-            hintText: "Capitals and Space only. Ex: NAME SURNAME",
-            prefixIcon: Icon(Icons.account_circle),
+        DropdownSearch<String>(
+          popupProps: const PopupProps.menu(
+            showSearchBox: true,
+            searchFieldProps: TextFieldProps(
+              decoration: InputDecoration(
+                labelText: "Search Name",
+                border: OutlineInputBorder(),
+                prefixIcon: Icon(Icons.search),
+              ),
+            ),
           ),
-          value: selectedStudentName,
-          items: studentNames
-              .map((name) => DropdownMenuItem(value: name, child: Text(name)))
-              .toList(),
+          items: studentNames,
+          selectedItem: selectedStudentName,
+          dropdownDecoratorProps: const DropDownDecoratorProps(
+            dropdownSearchDecoration: InputDecoration(
+              labelText: "Name",
+              prefixIcon: Icon(Icons.account_circle),
+            ),
+          ),
           onChanged: (value) {
             setState(() {
               selectedStudentName = value;
@@ -223,7 +233,6 @@ class _StudentFormState extends State<StudentForm> {
           validator: (value) =>
               value == null || value.isEmpty ? "Name is required" : null,
         ),
-
         // Date of Birth Field
         _buildDatePickerField(context),
 
