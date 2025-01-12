@@ -42,6 +42,7 @@ class LoginForm extends StatelessWidget {
                 labelText: 'Email',
                 prefixIcon: Icon(Icons.email),
               ),
+              /* Disabling temporarly
               validator: (value) {
                 if (value == null || value.isEmpty) {
                   return 'Please enter an email';
@@ -51,7 +52,7 @@ class LoginForm extends StatelessWidget {
                   return 'Please enter a valid email';
                 }
                 return null;
-              },
+              },*/
               onChanged: onEmailChanged,
             ),
             const SizedBox(height: 16),
@@ -62,12 +63,13 @@ class LoginForm extends StatelessWidget {
                 labelText: 'Password',
                 prefixIcon: Icon(Icons.lock),
               ),
+              /* Disabling temporarly
               validator: (value) {
                 if (value == null || value.isEmpty) {
                   return 'Please enter a password';
                 }
                 return null;
-              },
+              },*/
               onChanged: onPasswordChanged,
             ),
             const SizedBox(height: 38),

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:littleflower/layouts/home_tiles.dart';
 import 'package:littleflower/tabs/stats/gradelevel.dart';
+import 'package:littleflower/tabs/stats/notifications.dart';
 import 'package:littleflower/utils/under_progress.dart';
 
 class StatsLayout extends StatefulWidget {
@@ -42,7 +44,7 @@ class StatsLayoutState extends State<StatsLayout> {
         body: TabBarView(
           children: [
             GradeLevel(),
-            const UnderProgressWidget(),
+            HomePage(),
           ],
         ),
       ),
