@@ -1,27 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:littleflower/layouts/accounts.dart';
+import 'package:littleflower/layouts/inventory.dart';
+import 'package:littleflower/layouts/staff.dart';
+import 'package:littleflower/layouts/staff_details.dart';
+import 'package:littleflower/layouts/stats.dart';
+import 'package:littleflower/layouts/student.dart';
+import 'package:littleflower/layouts/student_details.dart';
+import 'package:littleflower/utils/under_progress.dart';
 
-void main() {
-  runApp(MyApp());
-}
-
-class MyApp extends StatelessWidget {
+class HomeTilesPage extends StatefulWidget {
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: HomePage(),
-      debugShowCheckedModeBanner: false,
-    );
-  }
+  _HomeTilesPageState createState() => _HomeTilesPageState();
 }
 
-class HomePage extends StatefulWidget {
-  @override
-  _HomePageState createState() => _HomePageState();
-}
-
-class _HomePageState extends State<HomePage> {
+class _HomeTilesPageState extends State<HomeTilesPage> {
   final List<TileData> tiles = [
-    TileData(Icons.login, "Login"),
     TileData(Icons.school, "Student"),
     TileData(Icons.description, "Student Details"),
     TileData(Icons.group, "Staff"),
@@ -32,7 +25,7 @@ class _HomePageState extends State<HomePage> {
     TileData(Icons.settings, "Utilities"),
   ];
 
-  bool isStatsSplit = false;
+  bool isStatsExpanded = false;
 
   @override
   Widget build(BuildContext context) {
@@ -47,19 +40,26 @@ class _HomePageState extends State<HomePage> {
             crossAxisSpacing: 40,
             childAspectRatio: 2,
           ),
-          itemCount: isStatsSplit ? tiles.length + 1 : tiles.length,
+          itemCount: tiles.length,
           itemBuilder: (context, index) {
-            if (isStatsSplit && (index == 5 || index == 6)) {
-              return _buildSubTile(index == 5 ? "Grade" : "School");
-            } else if (isStatsSplit && index > 6) {
-              final tile = tiles[index - 1];
-              return _buildTile(tile);
-            } else if (!isStatsSplit && index == 5) {
-              final tile = tiles[index];
-              return _buildTile(tile);
+            if (index == 4) {
+              return StatsTile(
+                isExpanded: isStatsExpanded,
+                onTap: () {
+                  setState(() {
+                    isStatsExpanded = !isStatsExpanded;
+                  });
+                },
+                navigateToStats: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => StatsLayout()),
+                  );
+                },
+              );
             } else {
               final tile = tiles[index];
-              return _buildTile(tile);
+              return _buildTile(tile, context);
             }
           },
         ),
@@ -67,7 +67,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _buildTile(TileData tile) {
+  Widget _buildTile(TileData tile, BuildContext context) {
     return Card(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
@@ -75,11 +75,7 @@ class _HomePageState extends State<HomePage> {
       elevation: 4,
       child: InkWell(
         onTap: () {
-          if (tile.label == "Stats") {
-            setState(() {
-              isStatsSplit = !isStatsSplit;
-            });
-          }
+          _navigateToPage(context, tile.label);
         },
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -105,26 +101,146 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _buildSubTile(String label) {
+  void _navigateToPage(BuildContext context, String label) {
+    switch (label) {
+      case "Student":
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => StudentLayout()),
+        );
+        break;
+      case "Student Details":
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => StudentDetailsLayout()),
+        );
+        break;
+      case "Staff":
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => StaffLayout()),
+        );
+        break;
+      case "Staff Details":
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => StaffDetailsLayout()),
+        );
+        break;
+      case "Stats":
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => StatsLayout()),
+        );
+        break;
+      case "Accounts":
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => AccountsLayout()),
+        );
+        break;
+      case "Inventory":
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => InventoryLayout()),
+        );
+        break;
+      case "Utilities":
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => UnderProgressWidget()),
+        );
+        break;
+    }
+  }
+}
+
+class StatsTile extends StatelessWidget {
+  final bool isExpanded;
+  final VoidCallback onTap;
+  final VoidCallback navigateToStats;
+
+  StatsTile({
+    required this.isExpanded,
+    required this.onTap,
+    required this.navigateToStats,
+  });
+
+  @override
+  Widget build(BuildContext context) {
     return Card(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
       ),
       elevation: 4,
       child: InkWell(
-        onTap: () {
-          // Handle sub-tile click
-        },
-        child: Center(
-          child: Text(
-            label,
-            style: TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.bold,
-              color: Colors.grey[800],
-            ),
-            textAlign: TextAlign.center,
-          ),
+        onTap: navigateToStats,
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: isExpanded
+              ? Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      "Stats",
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.grey[800],
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                    Divider(),
+                    Wrap(
+                      spacing: 8.0,
+                      runSpacing: 8.0,
+                      children: [
+                        _buildSubTile("Grade"),
+                        _buildSubTile("School"),
+                      ],
+                    ),
+                  ],
+                )
+              : Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.bar_chart,
+                        size: 40,
+                        color: Colors.grey[800],
+                      ),
+                      SizedBox(height: 8),
+                      Text(
+                        "Stats",
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.grey[800],
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ],
+                  ),
+                ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSubTile(String label) {
+    return Container(
+      padding: const EdgeInsets.all(8.0),
+      decoration: BoxDecoration(
+        border: Border.all(color: Colors.grey),
+        borderRadius: BorderRadius.circular(8.0),
+      ),
+      child: Text(
+        label,
+        style: TextStyle(
+          fontSize: 12,
+          fontWeight: FontWeight.bold,
+          color: Colors.grey[800],
         ),
       ),
     );

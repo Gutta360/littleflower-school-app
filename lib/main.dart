@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:littleflower/layouts/LoginHome.dart';
 import 'package:littleflower/layouts/home.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -36,7 +37,7 @@ class MainWidget extends StatelessWidget {
           ),
         ),
         debugShowCheckedModeBanner: false,
-        home: const HomeLayout());
+        home: const LoginHome());
   }
 }
 
