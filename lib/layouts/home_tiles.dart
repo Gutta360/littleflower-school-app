@@ -6,6 +6,7 @@ import 'package:littleflower/layouts/staff_details.dart';
 import 'package:littleflower/layouts/stats.dart';
 import 'package:littleflower/layouts/student.dart';
 import 'package:littleflower/layouts/student_details.dart';
+import 'package:littleflower/tabs/stats/gradelevel.dart';
 import 'package:littleflower/utils/under_progress.dart';
 
 class HomeTilesPage extends StatefulWidget {
@@ -174,7 +175,7 @@ class StatsTile extends StatelessWidget {
       ),
       elevation: 4,
       child: InkWell(
-        onTap: navigateToStats,
+        onTap: onTap,
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: isExpanded
@@ -195,8 +196,18 @@ class StatsTile extends StatelessWidget {
                       spacing: 8.0,
                       runSpacing: 8.0,
                       children: [
-                        _buildSubTile("Grade"),
-                        _buildSubTile("School"),
+                        _buildSubTile(context, "Grade", () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => UnderProgressWidget()),
+                          );
+                        }),
+                        _buildSubTile(context, "School", () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => UnderProgressWidget()),
+                          );
+                        }),
                       ],
                     ),
                   ],
@@ -228,19 +239,22 @@ class StatsTile extends StatelessWidget {
     );
   }
 
-  Widget _buildSubTile(String label) {
-    return Container(
-      padding: const EdgeInsets.all(8.0),
-      decoration: BoxDecoration(
-        border: Border.all(color: Colors.grey),
-        borderRadius: BorderRadius.circular(8.0),
-      ),
-      child: Text(
-        label,
-        style: TextStyle(
-          fontSize: 12,
-          fontWeight: FontWeight.bold,
-          color: Colors.grey[800],
+  Widget _buildSubTile(BuildContext context, String label, VoidCallback onTap) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.all(8.0),
+        decoration: BoxDecoration(
+          border: Border.all(color: Colors.grey),
+          borderRadius: BorderRadius.circular(8.0),
+        ),
+        child: Text(
+          label,
+          style: TextStyle(
+            fontSize: 12,
+            fontWeight: FontWeight.bold,
+            color: Colors.grey[800],
+          ),
         ),
       ),
     );
