@@ -211,7 +211,7 @@ class StatsTile extends StatelessWidget {
                         _buildSubTile(context, "Grade", () {
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => UnderProgressWidget()),
+                            MaterialPageRoute(builder: (context) => StudentListView()),
                           );
                         }),
                         _buildSubTile(context, "School", () {

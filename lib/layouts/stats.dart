@@ -43,7 +43,7 @@ class StatsLayoutState extends State<StatsLayout> {
         ),
         body: TabBarView(
           children: [
-            GradeLevel(),
+            HomeTilesPage(),
             HomeTilesPage(),
           ],
         ),
