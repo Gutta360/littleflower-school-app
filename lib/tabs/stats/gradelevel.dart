@@ -6,21 +6,26 @@ class Student {
   final double paidAmount;
   final double totalAmount;
 
-  Student({required this.name, required this.paidAmount, required this.totalAmount});
+  Student(
+      {required this.name,
+      required this.paidAmount,
+      required this.totalAmount});
 
   // Factory method to create a Student object from Firestore data
   factory Student.fromFirestore(Map<String, dynamic> data, double totalPaid) {
     return Student(
       name: data['student_name'] ?? 'Unknown',
       paidAmount: totalPaid,
-      totalAmount: double.tryParse(data['student_total_fee']?.toString() ?? '0') ?? 0.0,
+      totalAmount:
+          double.tryParse(data['student_total_fee']?.toString() ?? '0') ?? 0.0,
     );
   }
 }
 
 class StudentListView extends StatelessWidget {
   Future<List<Student>> fetchStudents() async {
-    final studentSnapshot = await FirebaseFirestore.instance.collection('students').get();
+    final studentSnapshot =
+        await FirebaseFirestore.instance.collection('students').get();
     List<Student> studentList = [];
 
     for (var studentDoc in studentSnapshot.docs) {
@@ -30,7 +35,8 @@ class StudentListView extends StatelessWidget {
           .get();
 
       double totalPaid = paymentSnapshot.docs.fold(0.0, (sum, doc) {
-        return sum + (double.tryParse(doc['payment_amount']?.toString() ?? '0') ?? 0.0);
+        return sum +
+            (double.tryParse(doc['payment_amount']?.toString() ?? '0') ?? 0.0);
       });
 
       studentList.add(Student.fromFirestore(studentDoc.data(), totalPaid));
@@ -66,7 +72,8 @@ class StudentListView extends StatelessWidget {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Center(child: CircularProgressIndicator());
         } else if (snapshot.hasError) {
-          return Center(child: Text('Error fetching students: ${snapshot.error}'));
+          return Center(
+              child: Text('Error fetching students: ${snapshot.error}'));
         } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
           return Center(child: Text('No students found'));
         }
@@ -84,23 +91,34 @@ class StudentListView extends StatelessWidget {
               child: Stack(
                 alignment: Alignment.center,
                 children: [
-                  Container(
-                    height: 50,
-                    decoration: BoxDecoration(
-                      color: Colors.grey[200],
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Row(
-                      children: [
-                        Container(
-                          width: percentage / 100 * MediaQuery.of(context).size.width,
-                          decoration: BoxDecoration(
-                            color: getBarColor(percentage),
-                            borderRadius: BorderRadius.horizontal(left: Radius.circular(8)),
-                          ),
+                  LayoutBuilder(
+                    builder: (context, constraints) {
+                      double barWidth = percentage / 100 * constraints.maxWidth;
+
+                      return Container(
+                        height: 50,
+                        decoration: BoxDecoration(
+                          color: Colors.grey[200],
+                          borderRadius: BorderRadius.circular(8),
                         ),
-                      ],
-                    ),
+                        child: Row(
+                          children: [
+                            Container(
+                              width: barWidth,
+                              decoration: BoxDecoration(
+                                color: getBarColor(percentage),
+                                borderRadius: BorderRadius.horizontal(
+                                  left: Radius.circular(8),
+                                  right: percentage == 100
+                                      ? Radius.circular(8)
+                                      : Radius.zero,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -109,18 +127,21 @@ class StudentListView extends StatelessWidget {
                         padding: EdgeInsets.symmetric(horizontal: 8),
                         child: Text(
                           "\$${student.paidAmount.toStringAsFixed(2)}",
-                          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, color: Colors.white),
                         ),
                       ),
                       Text(
                         student.name,
-                        style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, color: Colors.black),
                       ),
                       Padding(
                         padding: EdgeInsets.symmetric(horizontal: 8),
                         child: Text(
                           "\$${student.totalAmount.toStringAsFixed(2)}",
-                          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, color: Colors.white),
                         ),
                       ),
                     ],
