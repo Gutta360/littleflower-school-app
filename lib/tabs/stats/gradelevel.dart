@@ -126,9 +126,9 @@ class StudentListView extends StatelessWidget {
                       Padding(
                         padding: EdgeInsets.symmetric(horizontal: 8),
                         child: Text(
-                          "\$${student.paidAmount.toStringAsFixed(2)}",
+                          "₹${student.paidAmount.toStringAsFixed(2)}",
                           style: TextStyle(
-                              fontWeight: FontWeight.bold, color: Colors.white),
+                              fontWeight: FontWeight.bold, color: Colors.black),
                         ),
                       ),
                       Text(
@@ -139,9 +139,9 @@ class StudentListView extends StatelessWidget {
                       Padding(
                         padding: EdgeInsets.symmetric(horizontal: 8),
                         child: Text(
-                          "\$${student.totalAmount.toStringAsFixed(2)}",
+                          "₹${student.totalAmount.toStringAsFixed(2)}",
                           style: TextStyle(
-                              fontWeight: FontWeight.bold, color: Colors.white),
+                              fontWeight: FontWeight.bold, color: Colors.black),
                         ),
                       ),
                     ],

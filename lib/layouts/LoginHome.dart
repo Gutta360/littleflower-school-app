@@ -1,16 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:littleflower/layouts/accounts.dart';
-import 'package:littleflower/layouts/inventory.dart';
-import 'package:littleflower/layouts/stats.dart';
-import 'package:littleflower/layouts/student.dart';
 import 'package:littleflower/tabs/login/home_page.dart';
-import 'package:littleflower/tabs/login/loggedIn.dart';
-import 'package:littleflower/layouts/staff.dart';
-import 'package:littleflower/layouts/staff_details.dart';
-import 'package:littleflower/layouts/student_details.dart';
 import 'package:littleflower/main.dart';
-import 'package:littleflower/tabs/login/loggedout.dart';
-import 'package:littleflower/utils/under_progress.dart';
 import 'package:provider/provider.dart';
 
 class LoginHome extends StatefulWidget {
@@ -27,18 +17,36 @@ class _LoginHomeState extends State<LoginHome> {
     return DefaultTabController(
       length: 8,
       child: Scaffold(
-          appBar: AppBar(
-            title: const Text(
-              'A Little Flower The Leader',
-              style: TextStyle(
-                fontSize: 30,
-                fontWeight: FontWeight.bold,
-              ),
+        appBar: AppBar(
+          title: const Text(
+            'A Little Flower The Leader',
+            style: TextStyle(
+              fontSize: 30,
+              fontWeight: FontWeight.bold,
             ),
-            centerTitle: true,
-            backgroundColor: Colors.orange[500],
           ),
-          body: const HomePage()),
+          centerTitle: true,
+          backgroundColor: Colors.orange[500],
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.power_settings_new),
+              onPressed: () {
+                // Set isUserLoggedIn to false
+                globalData.setIsUserLoggedIn(false);
+
+                // Navigate to HomePage widget
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const LoginHome(),
+                  ),
+                );
+              },
+            ),
+          ],
+        ),
+        body: const HomePage(),
+      ),
     );
   }
 }
