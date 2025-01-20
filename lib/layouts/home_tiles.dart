@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:littleflower/layouts/accounts.dart';
 import 'package:littleflower/layouts/inventory.dart';
 import 'package:littleflower/layouts/payments.dart';
 import 'package:littleflower/layouts/salaries.dart';
 import 'package:littleflower/layouts/staff.dart';
 import 'package:littleflower/layouts/staff_details.dart';
-import 'package:littleflower/layouts/stats.dart';
 import 'package:littleflower/layouts/student.dart';
 import 'package:littleflower/layouts/student_details.dart';
 import 'package:littleflower/tabs/stats/gradelevel.dart';
 import 'package:littleflower/utils/under_progress.dart';
 
 class HomeTilesPage extends StatefulWidget {
+  const HomeTilesPage({super.key});
+
   @override
   _HomeTilesPageState createState() => _HomeTilesPageState();
 }
@@ -54,12 +54,6 @@ class _HomeTilesPageState extends State<HomeTilesPage> {
                     isStatsExpanded = !isStatsExpanded;
                   });
                 },
-                navigateToStats: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => StatsLayout()),
-                  );
-                },
               );
             } else if (index == 5) {
               return AccountsTile(
@@ -98,7 +92,7 @@ class _HomeTilesPageState extends State<HomeTilesPage> {
               size: 40,
               color: Colors.grey[800],
             ),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             Text(
               tile.label,
               style: TextStyle(
@@ -140,28 +134,16 @@ class _HomeTilesPageState extends State<HomeTilesPage> {
           MaterialPageRoute(builder: (context) => StaffDetailsLayout()),
         );
         break;
-      case "Stats":
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => StatsLayout()),
-        );
-        break;
-      case "Accounts":
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => AccountsLayout()),
-        );
-        break;
       case "Inventory":
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => InventoryLayout()),
+          MaterialPageRoute(builder: (context) => const InventoryLayout()),
         );
         break;
       case "Utilities":
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => UnderProgressWidget()),
+          MaterialPageRoute(builder: (context) => const UnderProgressWidget()),
         );
         break;
     }
@@ -171,12 +153,10 @@ class _HomeTilesPageState extends State<HomeTilesPage> {
 class StatsTile extends StatelessWidget {
   final bool isExpanded;
   final VoidCallback onTap;
-  final VoidCallback navigateToStats;
 
-  StatsTile({
+  const StatsTile({super.key, 
     required this.isExpanded,
     required this.onTap,
-    required this.navigateToStats,
   });
 
   @override
@@ -203,7 +183,7 @@ class StatsTile extends StatelessWidget {
                       ),
                       textAlign: TextAlign.center,
                     ),
-                    Divider(),
+                    const Divider(),
                     Wrap(
                       spacing: 8.0,
                       runSpacing: 8.0,
@@ -217,7 +197,7 @@ class StatsTile extends StatelessWidget {
                         _buildSubTile(context, "School", () {
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => UnderProgressWidget()),
+                            MaterialPageRoute(builder: (context) => const UnderProgressWidget()),
                           );
                         }),
                       ],
@@ -233,7 +213,7 @@ class StatsTile extends StatelessWidget {
                         size: 40,
                         color: Colors.grey[800],
                       ),
-                      SizedBox(height: 8),
+                      const SizedBox(height: 8),
                       Text(
                         "Stats",
                         style: TextStyle(
@@ -306,7 +286,7 @@ class AccountsTile extends StatelessWidget {
                       ),
                       textAlign: TextAlign.center,
                     ),
-                    Divider(),
+                    const Divider(),
                     Wrap(
                       spacing: 8.0,
                       runSpacing: 8.0,
@@ -314,13 +294,13 @@ class AccountsTile extends StatelessWidget {
                         _buildSubTile(context, "Payments", () {
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => PaymentsLayout()),
+                            MaterialPageRoute(builder: (context) => const PaymentsLayout()),
                           );
                         }),
                         _buildSubTile(context, "Salaries", () {
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => SalariesLayout()),
+                            MaterialPageRoute(builder: (context) => const SalariesLayout()),
                           );
                         }),
                       ],
@@ -336,7 +316,7 @@ class AccountsTile extends StatelessWidget {
                         size: 40,
                         color: Colors.grey[800],
                       ),
-                      SizedBox(height: 8),
+                      const SizedBox(height: 8),
                       Text(
                         "Accounts",
                         style: TextStyle(

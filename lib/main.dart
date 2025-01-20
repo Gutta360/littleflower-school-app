@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:littleflower/layouts/LoginHome.dart';
-import 'package:littleflower/layouts/home.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_core/firebase_core.dart';

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:littleflower/layouts/home.dart';
+import 'package:littleflower/layouts/home_tiles.dart';
 import 'package:littleflower/tabs/staff_details/staff.dart';
 import 'package:littleflower/tabs/staff_details/address.dart';
 
@@ -420,7 +420,7 @@ class _StaffDetailsLayoutState extends State<StaffDetailsLayout> {
         // Navigate to LayoutWidget
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(
-            builder: (context) => HomeLayout(),
+            builder: (context) => HomeTilesPage(),
           ),
         );
       } else {

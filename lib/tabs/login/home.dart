@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:littleflower/layouts/home.dart';
 import 'package:littleflower/layouts/home_tiles.dart';
 import 'package:littleflower/main.dart';
-import 'package:littleflower/tabs/login/loggedin.dart';
 import 'package:littleflower/tabs/login/login.dart';
 import 'package:provider/provider.dart';
 
@@ -20,14 +18,6 @@ class _HomePageState extends State<HomePage> {
 
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-
-  void _logout() {
-    Navigator.pushAndRemoveUntil(
-      context,
-      MaterialPageRoute(builder: (context) => const HomeLayout()),
-      (Route<dynamic> route) => false,
-    );
-  }
 
   void _forgotPassword() {
     print('Redirect to forgot password screen');
