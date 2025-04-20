@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:littleflower/layouts/home_tiles.dart';
+import 'package:littleflower/layouts/homelayout.dart';
 import 'package:littleflower/main.dart';
 import 'package:littleflower/tabs/login/login.dart';
 import 'package:provider/provider.dart';
@@ -32,7 +32,7 @@ class _HomePageState extends State<HomePage> {
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 1000),
           child: globalData.isUserLoggedIn
-              ? HomeTilesPage()
+              ? HomeLayoutWidget()
               : LoginForm(
                   formKey: _formKey,
                   emailController: _emailController,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:littleflower/layouts/homelayout.dart';
 import 'package:littleflower/tabs/login/home.dart';
 import 'package:littleflower/main.dart';
 import 'package:provider/provider.dart';
@@ -45,7 +46,7 @@ class _LoginHomeState extends State<LoginHome> {
             ),
           ],
         ),
-        body: const HomePage(),
+        body: HomeLayoutWidget(),
       ),
     );
   }

@@ -7,6 +7,8 @@ class Item extends StatelessWidget {
   TextEditingController availableController = TextEditingController();
   TextEditingController limitController = TextEditingController();
 
+  Item({super.key});
+
   Future<void> _addItem(BuildContext context) async {
     final name = itemNameController.text.trim();
     final priceText = itemPriceController.text.trim();
@@ -18,7 +20,7 @@ class Item extends StatelessWidget {
         availableText.isEmpty ||
         limitText.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Please fill in all fields.")),
+        const SnackBar(content: Text("Please fill in all fields.")),
       );
       return;
     }
@@ -29,21 +31,21 @@ class Item extends StatelessWidget {
 
     if (price == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Invalid price.")),
+        const SnackBar(content: Text("Invalid price.")),
       );
       return;
     }
 
     if (available == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Invalid available value.")),
+        const SnackBar(content: Text("Invalid available value.")),
       );
       return;
     }
 
     if (limit == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Invalid limit value.")),
+        const SnackBar(content: Text("Invalid limit value.")),
       );
       return;
     }
@@ -79,7 +81,7 @@ class Item extends StatelessWidget {
 
       // Show success message
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Item added successfully!")),
+        const SnackBar(content: Text("Item added successfully!")),
       );
 
       // Clear input fields
@@ -182,7 +184,7 @@ class Item extends StatelessWidget {
         hintText: hint,
         prefixIcon: Icon(icon),
       ),
-      keyboardType: TextInputType.numberWithOptions(decimal: true),
+      keyboardType: const TextInputType.numberWithOptions(decimal: true),
       onChanged: (value) {
         final decimalValue = value.replaceAll(RegExp(r'[^0-9.]'), '');
         if (value != decimalValue) {

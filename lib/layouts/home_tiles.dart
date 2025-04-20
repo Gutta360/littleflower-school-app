@@ -7,6 +7,7 @@ import 'package:littleflower/layouts/staff_details.dart';
 import 'package:littleflower/layouts/student.dart';
 import 'package:littleflower/layouts/student_details.dart';
 import 'package:littleflower/tabs/stats/gradelevel.dart';
+import 'package:littleflower/utils/json_upload.dart';
 import 'package:littleflower/utils/under_progress.dart';
 
 class HomeTilesPage extends StatefulWidget {
@@ -113,7 +114,7 @@ class _HomeTilesPageState extends State<HomeTilesPage> {
       case "Student":
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => StudentLayout()),
+          MaterialPageRoute(builder: (context) => StudentFormWidget()),
         );
         break;
       case "Student Details":
@@ -143,7 +144,7 @@ class _HomeTilesPageState extends State<HomeTilesPage> {
       case "Utilities":
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => const UnderProgressWidget()),
+          MaterialPageRoute(builder: (context) => JsonUploadWidget()),
         );
         break;
     }
